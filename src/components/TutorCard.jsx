@@ -21,28 +21,46 @@ const TutorCard = ({ tutor }) => {
         institution
     } = tutor;
 
+    const fallbackImage = "/assets/alt-user.png";
+    const profileSrc = photoUrl || fallbackImage;
+
     return (
         <div className="group flex flex-col h-full overflow-hidden rounded-2xl border border-gray-200/80 bg-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:border-gray-300/40">
 
-            {/* Media Header & Badge Section */}
-            <div className="relative w-full h-48 sm:h-52 md:h-56 overflow-hidden bg-gray-50 rounded-t-2xl">
-                <Image
-                    src={photoUrl || "/assets/alt-user.png"} 
-                    alt={tutorName}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    className="object-contain transition-transform duration-500 group-hover:scale-105"
-                />
+            <div className="relative w-full h-56 sm:h-60 overflow-hidden bg-gray-50 rounded-t-2xl">
+                
+                {/* 1. blurred img background */}
+                <div className="absolute inset-0 scale-110 blur-2xl opacity-30 select-none pointer-events-none">
+                    <Image
+                        src={profileSrc}
+                        alt=""
+                        fill
+                        sizes="10vw"
+                        className="object-cover"
+                        priority={false}
+                    />
+                </div>
+
+                {/* 2. Main Center Image  */}
+                <div className="relative w-full h-full z-10 p-2">
+                    <Image
+                        src={profileSrc} 
+                        alt={tutorName}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        className="object-contain transition-transform duration-700 ease-out group-hover:scale-102"
+                    />
+                </div>
 
                 {/* Teaching Mode Badge */}
-                <div className="absolute top-3 left-3 z-20 flex gap-2">
-                    <span className="rounded-lg bg-white/95 px-2.5 py-1 text-xs font-semibold text-gray-800 shadow-sm backdrop-blur-sm border border-gray-100">
+                <div className="absolute top-3.5 left-3.5 z-20 flex gap-2">
+                    <span className="rounded-lg bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-gray-800 shadow-sm border border-white/40 tracking-wide uppercase">
                         {teachingMode}
                     </span>
                 </div>
             </div>
 
-            {/* Main Content */}
+            {/* Main Content Info  */}
             <div className="flex flex-1 flex-col p-5">
                 <div className="flex-1 space-y-3">
 
@@ -51,10 +69,9 @@ const TutorCard = ({ tutor }) => {
                         <span>{subject}</span>
                     </div>
 
-                    {/* Main Name & Pricing Breakdown */}
+                    {/* Main Name & Pricing Part */}
                     <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                            {/* Title Hover State changed to match theme */}
                             <h2 className="text-xl font-bold tracking-tight text-gray-900 transition-colors group-hover:text-[#BB6984] line-clamp-1">
                                 {tutorName}
                             </h2>
@@ -85,7 +102,7 @@ const TutorCard = ({ tutor }) => {
                     </div>
                 </div>
 
-                {/* Action Button Link  */}
+                {/* Action Button Link */}
                 <div className="mt-5 pt-3 border-t border-gray-100">
                     <Link href={`/tutors/${_id}`} className="w-full block">
                         <Button

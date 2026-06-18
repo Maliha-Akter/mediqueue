@@ -26,13 +26,13 @@ const TutorPage = async () => {
 
                 {/*card structure */}
                 {tutors?.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                         {tutors.map(tutor => (
                             <TutorCard key={tutor._id || tutor.tutorName} tutor={tutor} />
                         ))}
                     </div>
                 ) : (
-                    /* Fallback state matching the new solid dark panel profile */
+                    /* If no tutor found */
                     <div className="text-center py-20 bg-white/10 border border-dashed border-white/20 rounded-3xl backdrop-blur-sm">
                         <p className="text-white font-medium">No tutors found at the moment.</p>
                     </div>
