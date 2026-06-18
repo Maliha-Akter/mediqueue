@@ -1,6 +1,5 @@
 // import { auth } from '@/lib/auth';
-// import { DeleteDialog } from '@/components/DeleteDialog'; // Added
-
+import  DeleteDialog  from '@/components/DeleteDialog'; 
 import { Button } from '@heroui/react';
 import { headers } from 'next/headers';
 import Image from 'next/image';
@@ -59,7 +58,7 @@ const TutorDetailsPage = async ({ params }) => {
                     {/* Management Actions (Edit/Delete Modals) */}
                     <div className="flex justify-end items-center gap-2 w-full sm:w-auto">
                         <EditModal tutor={tutor} />
-                        {/* <DeleteDialog tutor={tutor} /> */}
+                        <DeleteDialog tutor={tutor} />
                     </div>
                 </div>
 

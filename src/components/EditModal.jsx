@@ -3,23 +3,23 @@
 import { Button, FieldError, Input, Label, ListBox, Modal, Surface, TextArea, TextField, Select } from "@heroui/react";
 import React from "react";
 import { BiEdit } from "react-icons/bi";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export function EditModal({ tutor }) {
-    const { 
-        _id, 
-        tutorName, 
-        photoUrl, 
-        subject, 
-        teachingMode, 
-        location, 
-        availableDays, 
-        availableTimeSlot, 
-        hourlyFee, 
+    const {
+        _id,
+        tutorName,
+        photoUrl,
+        subject,
+        teachingMode,
+        location,
+        availableDays,
+        availableTimeSlot,
+        hourlyFee,
         institution,
-        description, 
+        description,
         email,
-        phone 
+        phone
     } = tutor;
 
     const onSubmit = async (e) => {
@@ -35,15 +35,21 @@ export function EditModal({ tutor }) {
                 },
                 body: JSON.stringify(updatedTutorData),
             });
-            
+            const data = await res.json();
+            console.log(data);
+
             if (res.ok) {
-                // toast.success("Tutor Profile Updated successfully!");
+                toast.success("Tutor Profile Updated successfully!");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             } else {
-                // toast.error("Failed to update tutor profile.");
+                toast.error("Failed to update tutor profile.");
             }
         } catch (error) {
             console.error("Error updating tutor:", error);
-            // toast.error("An error occurred while saving.");
+            toast.error("An error occurred while saving.");
         }
     };
 
@@ -59,15 +65,15 @@ export function EditModal({ tutor }) {
                         <Modal.Header>
                             <Modal.Heading>Edit Tutor Profile</Modal.Heading>
                         </Modal.Header>
-                        
+
                         <Modal.Body className="p-6">
                             <Surface variant="default">
                                 <form onSubmit={onSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        
+
                                         {/* Tutor Name */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={tutorName} name="tutorName" isRequired>
+                                            <TextField defaultValue={tutorName} name="tutorName" >
                                                 <Label>Full Name</Label>
                                                 <Input placeholder="Maliha Akter" className="rounded-2xl" />
                                                 <FieldError />
@@ -76,7 +82,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Institution */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={institution} name="institution" isRequired>
+                                            <TextField defaultValue={institution} name="institution" >
                                                 <Label>Institution</Label>
                                                 <Input placeholder="University Name" className="rounded-2xl" />
                                                 <FieldError />
@@ -84,7 +90,7 @@ export function EditModal({ tutor }) {
                                         </div>
 
                                         {/* Subject */}
-                                        <TextField defaultValue={subject} name="subject" isRequired>
+                                        <TextField defaultValue={subject} name="subject" >
                                             <Label>Subject Specialist</Label>
                                             <Input placeholder="Computer Science" className="rounded-2xl" />
                                             <FieldError />
@@ -95,7 +101,7 @@ export function EditModal({ tutor }) {
                                             <Select
                                                 defaultValue={teachingMode}
                                                 name="teachingMode"
-                                                isRequired
+
                                                 className="w-full"
                                                 placeholder="Select Mode"
                                             >
@@ -115,42 +121,42 @@ export function EditModal({ tutor }) {
                                         </div>
 
                                         {/* Location */}
-                                        <TextField defaultValue={location} name="location" isRequired>
+                                        <TextField defaultValue={location} name="location" >
                                             <Label>Location / City</Label>
                                             <Input placeholder="Dhaka, Bangladesh" className="rounded-2xl" />
                                             <FieldError />
                                         </TextField>
 
                                         {/* Hourly Fee Rate */}
-                                        <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" isRequired>
+                                        <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" >
                                             <Label>Hourly Rate ($)</Label>
                                             <Input type="number" placeholder="30" className="rounded-2xl" />
                                             <FieldError />
                                         </TextField>
 
                                         {/* Available Days */}
-                                        <TextField defaultValue={availableDays} name="availableDays" isRequired>
+                                        <TextField defaultValue={availableDays} name="availableDays" >
                                             <Label>Available Days</Label>
                                             <Input placeholder="Sat, Mon, Wed" className="rounded-2xl" />
                                             <FieldError />
                                         </TextField>
 
                                         {/* Available Time Slot */}
-                                        <TextField defaultValue={availableTimeSlot} name="availableTimeSlot" isRequired>
+                                        <TextField defaultValue={availableTimeSlot} name="availableTimeSlot" >
                                             <Label>Available Time Slot</Label>
                                             <Input placeholder="4:00 PM - 6:00 PM" className="rounded-2xl" />
                                             <FieldError />
                                         </TextField>
 
                                         {/* Profile Contact Email */}
-                                        <TextField defaultValue={email} name="email" type="email" isRequired>
+                                        <TextField defaultValue={email} name="email" type="email" >
                                             <Label>Contact Email</Label>
                                             <Input type="email" placeholder="tutor@example.com" className="rounded-2xl" />
                                             <FieldError />
                                         </TextField>
 
                                         {/* Contact Phone */}
-                                        <TextField defaultValue={phone} name="phone" isRequired>
+                                        <TextField defaultValue={phone} name="phone" >
                                             <Label>Contact Phone</Label>
                                             <Input placeholder="+880 1700-000000" className="rounded-2xl" />
                                             <FieldError />
@@ -167,7 +173,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Professional Description Biography */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={description} name="description" isRequired>
+                                            <TextField defaultValue={description} name="description" >
                                                 <Label>About Biography / Overview</Label>
                                                 <TextArea
                                                     placeholder="Describe your structural teaching methods and academic background experience..."
@@ -180,8 +186,8 @@ export function EditModal({ tutor }) {
 
                                     {/* Action Footers Panel */}
                                     <Modal.Footer className="px-0 pt-4">
-                                        <Button 
-                                            type="submit" 
+                                        <Button
+                                            type="submit"
                                             slot="close"
                                             className="w-full bg-[#BB6984] text-white font-bold rounded-2xl py-5 hover:bg-[#a3536d] transition-colors"
                                         >

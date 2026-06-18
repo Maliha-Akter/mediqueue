@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { 
     Button, 
     FieldError, 
@@ -26,6 +26,7 @@ import {
     FaUniversity,
     FaBriefcase
 } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const AddTutorPage = () => {
     const router = useRouter();
@@ -53,6 +54,8 @@ const AddTutorPage = () => {
 
             if (res.ok) {
                 // router.push('/tutors');
+                toast.success("Successfully Added")
+                redirect('/tutors')
             }
         } catch (error) {
             console.error("Submission Error:", error);
