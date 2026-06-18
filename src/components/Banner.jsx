@@ -65,7 +65,7 @@ const Banner = () => {
     const [prevIndex, setPrevIndex] = useState(0);
     const [triggerRipple, setTriggerRipple] = useState(false);
 
-    // Broadcast active hex color changes
+    
     useEffect(() => {
         const activeColor = banners[activeIndex].hexColor;
         const event = new CustomEvent('bannerColorChange', { detail: activeColor });
@@ -144,7 +144,7 @@ const Banner = () => {
 
                     <div className="flex flex-wrap gap-4 mt-6">
                         <Link href="/login" className="px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95">
-                            Start Learning
+                            Book a Tutor
                         </Link>
                         <button type="button" className="px-6 py-3 border border-[#aa4465] bg-white/40 backdrop-blur-sm hover:bg-[#aa4465] hover:text-white text-gray-700 flex items-center justify-center gap-3 rounded-xl font-semibold transition-all shadow-sm">
                             <FcGoogle size={22} />
@@ -192,7 +192,7 @@ const Banner = () => {
                         </Swiper>
                     </div>
 
-                    {/* CUSTOM NAVIGATION BUTTONS */}
+                    {/* */}
                     <div className="flex gap-4 mt-6 z-40">
                         <button
                             className="swiper-custom-prev flex items-center justify-center w-12 h-12 rounded-full border border-gray-300/80 bg-white/70 backdrop-blur-sm text-gray-800 font-bold text-lg shadow-md hover:bg-white transition-all transform active:scale-90 select-none cursor-pointer"
