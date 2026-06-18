@@ -1,21 +1,53 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const Navbar = () => {
-    // States to control whether the menus are visible or hidden /toggle
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+    
+    const [dynamicBgColor, setDynamicBgColor] = useState('#fdf2f8');  slide
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        // 1. Monitor Banner Swiper Slide Changes
+        const handleColorChange = (e) => {
+            setDynamicBgColor(e.detail);
+        };
+
+        // 2. Monitor Page Scrolling 
+        const handleScroll = () => {
+            if (window.scrollY > 40) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('bannerColorChange', handleColorChange);
+        window.addEventListener('scroll', handleScroll);
+        
+        return () => {
+            window.removeEventListener('bannerColorChange', handleColorChange);
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
-        <nav className="bg-white shadow-md sticky top-0 z-50">
+        <nav 
+            style={{ 
+                backgroundColor: isScrolled ? '#ffffff' : dynamicBgColor 
+            }}
+            className={`sticky top-0 z-50 transition-all duration-500 ${
+                isScrolled ? 'shadow-md border-b border-gray-100' : 'shadow-none'
+            }`}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
 
-                    {/* LEFT SECTION: Hamburger (Mobile) & Logo */}
+                    {/* LEFT SECTION: Hamburger */}
                     <div className="flex items-center">
-                        {/* Mobile Hamburger Menu Button */}
                         <div className="relative mr-2 lg:hidden">
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -27,18 +59,16 @@ const Navbar = () => {
                                 </svg>
                             </button>
 
-                            
-                            {/* Mobile Dropdown List (Sliding animation from top) */}
+                            {/* Mobile Dropdown List */}
                             <ul
-                                className={`fixed left-0 right-0 w-full bg-white shadow-lg border-b border-gray-100 py-4 px-6 z-40 transition-all duration-1000 ease-in-out origin-top ${isMobileMenuOpen
+                                className={`fixed left-0 right-0 w-full bg-white shadow-lg border-b border-gray-100 py-4 px-6 z-40 transition-all duration-700 ease-in-out origin-top ${
+                                    isMobileMenuOpen
                                         ? 'top-16 opacity-100 visible translate-y-0'
                                         : '-top-96 opacity-0 invisible -translate-y-4'
-                                    }`}
+                                }`}
                             >
                                 <li className="py-2"><Link href="/" className="block text-base font-medium text-gray-700 hover:text-[#aa4465]" onClick={() => setIsMobileMenuOpen(false)}>Home</Link></li>
                                 <li className="py-2"><Link href="/tutors" className="block text-base font-medium text-gray-700 hover:text-[#aa4465]" onClick={() => setIsMobileMenuOpen(false)}>Tutors</Link></li>
-
-                                {/* Protected mobile links */}
                                 <li className="border-t border-gray-100 mt-2 pt-2 py-2"><Link href="/add-tutor" className="block text-base font-medium text-gray-700 hover:text-[#aa4465]" onClick={() => setIsMobileMenuOpen(false)}>Add Tutor</Link></li>
                                 <li className="py-2"><Link href="/my-tutors" className="block text-base font-medium text-gray-700 hover:text-[#aa4465]" onClick={() => setIsMobileMenuOpen(false)}>My Tutors</Link></li>
                                 <li className="py-2"><Link href="/booked-sessions" className="block text-base font-medium text-gray-700 hover:text-[#aa4465]" onClick={() => setIsMobileMenuOpen(false)}>My Booked Sessions</Link></li>
@@ -51,7 +81,7 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* CENTER SECTION*/}
+                    {/* CENTER SECTION */}
                     <div className="hidden lg:flex space-x-8 items-center">
                         <Link href="/" className="text-gray-600 hover:text-[#aa4465] font-medium transition-colors">Home</Link>
                         <Link href="/tutors" className="text-gray-600 hover:text-[#aa4465] font-medium transition-colors">Tutors</Link>
@@ -60,14 +90,14 @@ const Navbar = () => {
                         <Link href="/booked-sessions" className="text-gray-600 hover:text-[#aa4465] font-medium transition-colors">My Booked Sessions</Link>
                     </div>
 
-                    {/* RIGHT SECTION: Auth Buttons , login/out/register & Profile Layout */}
+                    {/* RIGHT SECTION */}
                     <div className="flex items-center space-x-6">
                         <div className="flex items-center space-x-4">
                             <Link href="/login" className="text-gray-600 hover:text-[#aa4465] font-medium transition-colors">Login</Link>
                             <Link href="/register" className="bg-[#aa4465] text-white px-4 py-2 rounded-lg hover:bg-[#8f3552] transition-colors font-medium shadow-sm">Register</Link>
                         </div>
 
-                        {/* Logged In Profile Image Menu */}
+                        {/* Profile Menu */}
                         <div className="relative border-l border-gray-200 pl-4 flex items-center">
                             <button
                                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -80,7 +110,6 @@ const Navbar = () => {
                                 />
                             </button>
 
-                            {/* Profile Dropdown Container (Controlled by state) */}
                             <div className={`absolute right-0 top-10 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50 ${isProfileDropdownOpen ? 'block' : 'hidden'}`}>
                                 <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#aa4465]" onClick={() => setIsProfileDropdownOpen(false)}>
                                     My Profile
@@ -91,7 +120,6 @@ const Navbar = () => {
                                 </button>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
