@@ -9,6 +9,7 @@ import { LuMapPin } from 'react-icons/lu';
 import { FaRegClock, FaBookOpen, FaUniversity, FaChalkboardTeacher } from 'react-icons/fa';
 import { FiChevronLeft, FiPhone, FiMail } from 'react-icons/fi';
 import EditModal from '@/components/EditModal';
+import BookSessionModal from '@/components/BookSessionModal';
 
 
 
@@ -172,11 +173,7 @@ const TutorDetailsPage = async ({ params }) => {
                             </div>
 
                             {/* Booking Action  */}
-                            <Button
-                                className="w-full font-bold text-md bg-[#BB6984] text-white hover:bg-[#a3536d] transition-colors duration-200 shadow-md py-6 rounded-2xl"
-                            >
-                                Request Session Placement
-                            </Button>
+                            <BookSessionModal tutor={tutor} />
                         </div>
                     </div>
 
