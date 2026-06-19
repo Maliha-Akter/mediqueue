@@ -1,56 +1,88 @@
-// import { auth } from '@/lib/auth';
-import  DeleteDialog  from '@/components/DeleteDialog'; 
+import DeleteDialog from '@/components/DeleteDialog';
 import { Button } from '@heroui/react';
 import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { LuMapPin } from 'react-icons/lu';
-import { FaRegClock, FaBookOpen, FaUniversity, FaChalkboardTeacher } from 'react-icons/fa';
+import { FaRegClock, FaBookOpen, FaUniversity, FaChalkboardTeacher, FaRegCalendarAlt, FaUsers } from 'react-icons/fa';
 import { FiChevronLeft, FiPhone, FiMail } from 'react-icons/fi';
 import EditModal from '@/components/EditModal';
 import BookSessionModal from '@/components/BookSessionModal';
-
-
+import { auth } from '@/lib/auth';
 
 const TutorDetailsPage = async ({ params }) => {
     const { id } = await params;
-    
-    // const { token } = await auth.api.getToken({
-    //     headers: await headers()
-    // });
 
+    // 1. Fetching the logged-in user session on the Server
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    const currentUser = session?.user || null;
+
+    // 2. Fetching the tutor details
     const res = await fetch(`http://localhost:5000/tutor/${id}`);
     const tutor = await res.json();
 
-    const { 
-        _id, 
-        tutorName, 
-        photoUrl, 
-        subject, 
-        teachingMode, 
-        location, 
-        availableDays, 
-        availableTimeSlot, 
-        hourlyFee, 
+    // 3. SAFE CHECK: Return fallback UI if data is missing or empty
+    if (!tutor || Object.keys(tutor).length === 0) {
+        return (
+            <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 p-4">
+                <div className="text-center space-y-4">
+                    <h2 className="text-2xl font-bold text-gray-800">Tutor Profile Not Found</h2>
+                    <p className="text-gray-500 max-w-sm">
+                        The profile you are trying to access does not exist, or could not be loaded at this time.
+                    </p>
+                    <Link
+                        href="/tutors"
+                        className="inline-flex items-center gap-1 text-sm font-semibold text-[#BB6984] hover:underline"
+                    >
+                        <FiChevronLeft /> Return to Directory
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    const {
+        _id,
+        tutorName,
+        photoUrl,
+        subject,
+        teachingMode,
+        location,
+        availableDays,
+        availableTimeSlot,
+        sessionStartDate,
+        hourlyFee,
         institution,
-        description, 
+        description,
         email,
-        phone 
+        phone,
+        totalSlots 
     } = tutor;
 
     const fallbackImage = "/assets/alt-user.png";
     const profileSrc = photoUrl || fallbackImage;
 
+    
+    const formattedSessionDate = sessionStartDate
+        ? new Date(sessionStartDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+        : "To Be Scheduled";
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#CC8FA3]/20 via-gray-50 to-white py-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 {/* Action Part */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     {/* Back Link */}
-                    <Link 
-                        href="/tutors" 
+                    <Link
+                        href="/tutors"
                         className="inline-flex items-center gap-1 text-sm font-semibold text-[#BB6984] hover:underline"
                     >
                         <FiChevronLeft /> Back to Directory
@@ -63,17 +95,15 @@ const TutorDetailsPage = async ({ params }) => {
                     </div>
                 </div>
 
-                {/* 1 */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    
+
                     {/* Left Column  */}
                     <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                        
                         <div className="relative w-full h-80 sm:h-96 bg-gray-50 rounded-t-3xl overflow-hidden flex items-center justify-center">
                             <div className="relative w-full h-full p-6">
                                 <Image
                                     src={profileSrc}
-                                    alt={tutorName}
+                                    alt={tutorName || "Tutor Profile"}
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 66vw"
                                     className="object-contain"
@@ -84,7 +114,6 @@ const TutorDetailsPage = async ({ params }) => {
 
                         {/* Text & Informational Details  */}
                         <div className="p-6 sm:p-8 space-y-6">
-                            
                             <div className="space-y-3">
                                 <div className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[#BB6984]">
                                     <FaBookOpen size={13} />
@@ -107,15 +136,27 @@ const TutorDetailsPage = async ({ params }) => {
 
                             <hr className="border-gray-100" />
 
-                            {/* Scheduling Availability & Teaching Mode Part */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Scheduling Availability, Teaching Mode & Available Slots */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-3">
                                     <h3 className="text-lg font-bold text-gray-900">Schedule Details</h3>
-                                    <div className="flex items-start gap-3 bg-gray-50 rounded-2xl p-4 text-gray-700 text-sm h-full">
-                                        <FaRegClock className="text-[#BB6984] shrink-0 mt-0.5" size={16} />
-                                        <div>
-                                            <p className="font-bold text-gray-900">{availableDays}</p>
-                                            <p className="text-gray-500 text-xs mt-0.5">{availableTimeSlot}</p>
+                                    <div className="flex flex-col gap-3 bg-gray-50 rounded-2xl p-4 text-gray-700 text-sm h-full">
+                                        {/* Session Start Date */}
+                                        <div className="flex items-start gap-3">
+                                            <FaRegCalendarAlt className="text-[#BB6984] shrink-0 mt-0.5" size={16} />
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Session Start Date</p>
+                                                <p className="font-bold text-gray-900">{formattedSessionDate}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Days and Hours Info */}
+                                        <div className="flex items-start gap-3 pt-2 border-t border-gray-200/60">
+                                            <FaRegClock className="text-[#BB6984] shrink-0 mt-0.5" size={16} />
+                                            <div>
+                                                <p className="font-bold text-gray-900">{availableDays}</p>
+                                                <p className="text-gray-500 text-xs mt-0.5">{availableTimeSlot}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -127,6 +168,21 @@ const TutorDetailsPage = async ({ params }) => {
                                         <div>
                                             <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Preferred Mode</p>
                                             <p className="font-bold text-gray-900 text-base mt-0.5 capitalize">{teachingMode}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ADDED: Available Slots Card Grid Option */}
+                                <div className="space-y-3">
+                                    <h3 className="text-lg font-bold text-gray-900">Seat Capacity</h3>
+                                    <div className="flex items-start gap-3 bg-gray-50 rounded-2xl p-4 text-gray-700 text-sm h-full">
+                                        <FaUsers className="text-[#BB6984] shrink-0 mt-0.5" size={16} />
+                                        <div>
+                                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Available Slots</p>
+                                            <p className={`font-black text-2xl mt-0.5 ${totalSlots > 0 ? "text-emerald-600" : "text-red-500"}`}>
+                                                {totalSlots ?? 0}
+                                            </p>
+                                            <p className="text-xs text-gray-400 font-medium">Seats remaining</p>
                                         </div>
                                     </div>
                                 </div>
@@ -172,8 +228,11 @@ const TutorDetailsPage = async ({ params }) => {
                                 </div>
                             </div>
 
-                            {/* Booking Action  */}
-                            <BookSessionModal tutor={tutor} />
+                             <BookSessionModal
+                                tutor={tutor}
+                                currentUser={currentUser}
+                                userId={currentUser?.id || currentUser?._id || null}
+                            />
                         </div>
                     </div>
 

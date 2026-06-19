@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { 
     Button, 
     FieldError, 
@@ -27,18 +27,39 @@ import {
     FaBriefcase
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { authClient } from '@/lib/auth-client';
+// Import your authClient configuration file here
+// import { authClient } from "@/lib/auth"; 
 
 const AddTutorPage = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Get active user identity session
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+    const activeUserId = user?.id || user?._id;
+
     const onSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!activeUserId) {
+            toast.error("You must be logged in to create a listing.");
+            return;
+        }
+
         setIsSubmitting(true);
         
         const formData = new FormData(e.currentTarget);
-        const tutorData = Object.fromEntries(formData.entries());
-        console.log(tutorData);
+        const formFields = Object.fromEntries(formData.entries());
+        
+        // Combine form fields and seamlessly trace ownership back to the posting creator
+        const tutorData = {
+            ...formFields,
+            userId: activeUserId
+        };
+
+        console.log("Submitting updated payload:", tutorData);
 
         try {
             const res = await fetch('http://localhost:5000/tutor', {
@@ -50,15 +71,15 @@ const AddTutorPage = () => {
             });
 
             const data = await res.json();
-            console.log(data);
+            console.log("Server response acknowledgment:", data);
 
             if (res.ok) {
-                // router.push('/tutors');
-                toast.success("Successfully Added")
-                redirect('/tutors')
+                toast.success("Successfully Added Profile Layout");
+                router.push('/tutors');
             }
         } catch (error) {
             console.error("Submission Error:", error);
+            toast.error("Failed to sync structural listing context");
         } finally {
             setIsSubmitting(false);
         }
@@ -190,8 +211,6 @@ const AddTutorPage = () => {
                                 3. Availability Matrix & Terms
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                
-                                {/* Separated Available Days Options */}
                                 <div>
                                     <Select
                                         name="availableDays"
@@ -218,7 +237,6 @@ const AddTutorPage = () => {
                                     </Select>
                                 </div>
 
-                                {/* Separated Available Time Slots */}
                                 <div>
                                     <Select
                                         name="availableTimeSlot"
@@ -276,7 +294,7 @@ const AddTutorPage = () => {
                             </div>
                         </div>
 
-                        {/* SECTION 4: SEPARATED INSTITUTION & EXPERIENCE */}
+                        {/* SECTION 4: INSTITUTION & EXPERIENCE */}
                         <div className="space-y-4">
                             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-100 pb-2">
                                 4. Academic Background & Qualifications
@@ -298,7 +316,7 @@ const AddTutorPage = () => {
                                             <FaBriefcase className="text-gray-400" size={14} /> Professional Experience Detail
                                         </Label>
                                         <TextArea
-                                            placeholder="e.g., 5+ years instructing Advanced Placement (AP) calculus courses along with university level research supervision..."
+                                            placeholder="e.g., 5+ years instructing Advanced Placement (AP) calculus courses..."
                                             className="rounded-xl shadow-sm min-h-[120px]"
                                         />
                                         <FieldError className="text-xs text-rose-500 mt-1" />

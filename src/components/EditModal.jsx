@@ -1,7 +1,18 @@
 "use client";
 
-import { Button, FieldError, Input, Label, ListBox, Modal, Surface, TextArea, TextField, Select } from "@heroui/react";
-import React from "react";
+import React, { useState } from "react";
+import { 
+    Button, 
+    FieldError, 
+    Input, 
+    Label, 
+    ListBox, 
+    Modal, 
+    Surface, 
+    TextArea, 
+    TextField, 
+    Select 
+} from "@heroui/react";
 import { BiEdit } from "react-icons/bi";
 import { toast } from "react-toastify";
 
@@ -15,15 +26,19 @@ export function EditModal({ tutor }) {
         location,
         availableDays,
         availableTimeSlot,
+        sessionStartDate,
         hourlyFee,
+        totalSlots,
         institution,
-        description,
-        email,
-        phone
+        experience
     } = tutor;
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+
         const formData = new FormData(e.currentTarget);
         const updatedTutorData = Object.fromEntries(formData.entries());
 
@@ -36,11 +51,10 @@ export function EditModal({ tutor }) {
                 body: JSON.stringify(updatedTutorData),
             });
             const data = await res.json();
-            console.log(data);
+            console.log("Server Acknowledgement:", data);
 
             if (res.ok) {
                 toast.success("Tutor Profile Updated successfully!");
-
                 setTimeout(() => {
                     window.location.reload();
                 }, 1500);
@@ -50,6 +64,8 @@ export function EditModal({ tutor }) {
         } catch (error) {
             console.error("Error updating tutor:", error);
             toast.error("An error occurred while saving.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -60,7 +76,7 @@ export function EditModal({ tutor }) {
             </Button>
             <Modal.Backdrop>
                 <Modal.Container placement="auto">
-                    <Modal.Dialog className="sm:max-w-xl">
+                    <Modal.Dialog className="sm:max-w-2xl">
                         <Modal.CloseTrigger />
                         <Modal.Header>
                             <Modal.Heading>Edit Tutor Profile</Modal.Heading>
@@ -73,35 +89,52 @@ export function EditModal({ tutor }) {
 
                                         {/* Tutor Name */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={tutorName} name="tutorName" >
+                                            <TextField defaultValue={tutorName} name="tutorName" isRequired>
                                                 <Label>Full Name</Label>
-                                                <Input placeholder="Maliha Akter" className="rounded-2xl" />
+                                                <Input placeholder="Tutor Name" className="rounded-2xl" />
                                                 <FieldError />
                                             </TextField>
                                         </div>
 
                                         {/* Institution */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={institution} name="institution" >
+                                            <TextField defaultValue={institution} name="institution" isRequired>
                                                 <Label>Institution</Label>
                                                 <Input placeholder="University Name" className="rounded-2xl" />
                                                 <FieldError />
                                             </TextField>
                                         </div>
 
-                                        {/* Subject */}
-                                        <TextField defaultValue={subject} name="subject" >
-                                            <Label>Subject Specialist</Label>
-                                            <Input placeholder="Computer Science" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Teaching Mode Setup Selection */}
+                                        {/* Subject / Category Dropdown Setup */}
                                         <div>
                                             <Select
-                                                defaultValue={teachingMode}
-                                                name="teachingMode"
+                                                defaultValue={subject}
+                                                name="subject"
+                                                className="w-full"
+                                                placeholder="Select Subject"
+                                            >
+                                                <Label>Subject Specialist</Label>
+                                                <Select.Trigger className="rounded-2xl">
+                                                    <Select.Value />
+                                                    <Select.Indicator />
+                                                </Select.Trigger>
+                                                <Select.Popover>
+                                                    <ListBox>
+                                                        {['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Computer Science', 'Language Arts'].map((sub) => (
+                                                            <ListBox.Item key={sub} id={sub} textValue={sub}>
+                                                                {sub} <ListBox.ItemIndicator />
+                                                            </ListBox.Item>
+                                                        ))}
+                                                    </ListBox>
+                                                </Select.Popover>
+                                            </Select>
+                                        </div>
 
+                                        {/* Teaching Mode Dropdown */}
+                                        <div>
+                                            <Select
+                                                defaultValue={teachingMode || "Online"}
+                                                name="teachingMode"
                                                 className="w-full"
                                                 placeholder="Select Mode"
                                             >
@@ -112,72 +145,115 @@ export function EditModal({ tutor }) {
                                                 </Select.Trigger>
                                                 <Select.Popover>
                                                     <ListBox>
-                                                        <ListBox.Item id="online" textValue="Online">Online <ListBox.ItemIndicator /></ListBox.Item>
-                                                        <ListBox.Item id="offline" textValue="Offline">Offline <ListBox.ItemIndicator /></ListBox.Item>
-                                                        <ListBox.Item id="hybrid" textValue="Hybrid">Hybrid <ListBox.ItemIndicator /></ListBox.Item>
+                                                        <ListBox.Item id="Online" textValue="Online">Online <ListBox.ItemIndicator /></ListBox.Item>
+                                                        <ListBox.Item id="Offline" textValue="Offline">Offline <ListBox.ItemIndicator /></ListBox.Item>
+                                                        <ListBox.Item id="Both" textValue="Both">Both <ListBox.ItemIndicator /></ListBox.Item>
                                                     </ListBox>
                                                 </Select.Popover>
                                             </Select>
                                         </div>
 
                                         {/* Location */}
-                                        <TextField defaultValue={location} name="location" >
-                                            <Label>Location / City</Label>
-                                            <Input placeholder="Dhaka, Bangladesh" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Hourly Fee Rate */}
-                                        <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" >
-                                            <Label>Hourly Rate ($)</Label>
-                                            <Input type="number" placeholder="30" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Available Days */}
-                                        <TextField defaultValue={availableDays} name="availableDays" >
-                                            <Label>Available Days</Label>
-                                            <Input placeholder="Sat, Mon, Wed" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Available Time Slot */}
-                                        <TextField defaultValue={availableTimeSlot} name="availableTimeSlot" >
-                                            <Label>Available Time Slot</Label>
-                                            <Input placeholder="4:00 PM - 6:00 PM" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Profile Contact Email */}
-                                        <TextField defaultValue={email} name="email" type="email" >
-                                            <Label>Contact Email</Label>
-                                            <Input type="email" placeholder="tutor@example.com" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Contact Phone */}
-                                        <TextField defaultValue={phone} name="phone" >
-                                            <Label>Contact Phone</Label>
-                                            <Input placeholder="+880 1700-000000" className="rounded-2xl" />
-                                            <FieldError />
-                                        </TextField>
-
-                                        {/* Photo URL */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={photoUrl} name="photoUrl">
-                                                <Label>Profile Image URL</Label>
-                                                <Input type="url" placeholder="https://example.com/photo.jpg" className="rounded-2xl" />
+                                            <TextField defaultValue={location} name="location" isRequired>
+                                                <Label>Location / City</Label>
+                                                <Input placeholder="Location Area" className="rounded-2xl" />
                                                 <FieldError />
                                             </TextField>
                                         </div>
 
-                                        {/* Professional Description Biography */}
+                                        {/* Available Days Dropdown Selection */}
+                                        <div>
+                                            <Select
+                                                defaultValue={availableDays}
+                                                name="availableDays"
+                                                className="w-full"
+                                                placeholder="Select Days"
+                                            >
+                                                <Label>Available Days</Label>
+                                                <Select.Trigger className="rounded-2xl">
+                                                    <Select.Value />
+                                                    <Select.Indicator />
+                                                </Select.Trigger>
+                                                <Select.Popover>
+                                                    <ListBox>
+                                                        <ListBox.Item id="Sun - Thu" textValue="Sun - Thu">Sun - Thu</ListBox.Item>
+                                                        <ListBox.Item id="Fri - Sat" textValue="Fri - Sat">Fri - Sat</ListBox.Item>
+                                                        <ListBox.Item id="Mon - Wed - Fri" textValue="Mon - Wed - Fri">Mon - Wed - Fri</ListBox.Item>
+                                                        <ListBox.Item id="Tue - Thu - Sat" textValue="Tue - Thu - Sat">Tue - Thu - Sat</ListBox.Item>
+                                                        <ListBox.Item id="Everyday" textValue="Everyday">Everyday</ListBox.Item>
+                                                    </ListBox>
+                                                </Select.Popover>
+                                            </Select>
+                                        </div>
+
+                                        {/* Available Time Slot Dropdown Selection */}
+                                        <div>
+                                            <Select
+                                                defaultValue={availableTimeSlot}
+                                                name="availableTimeSlot"
+                                                className="w-full"
+                                                placeholder="Select Time Slot"
+                                            >
+                                                <Label>Available Time Slot</Label>
+                                                <Select.Trigger className="rounded-2xl">
+                                                    <Select.Value />
+                                                    <Select.Indicator />
+                                                </Select.Trigger>
+                                                <Select.Popover>
+                                                    <ListBox>
+                                                        <ListBox.Item id="09:00 AM - 12:00 PM" textValue="09:00 AM - 12:00 PM">Morning (09:00 AM - 12:00 PM)</ListBox.Item>
+                                                        <ListBox.Item id="02:00 PM - 05:00 PM" textValue="02:00 PM - 05:00 PM">Afternoon (02:00 PM - 05:00 PM)</ListBox.Item>
+                                                        <ListBox.Item id="05:00 PM - 08:00 PM" textValue="05:00 PM - 08:00 PM">Evening (05:00 PM - 08:00 PM)</ListBox.Item>
+                                                        <ListBox.Item id="08:00 PM - 11:00 PM" textValue="08:00 PM - 11:00 PM">Night (08:00 PM - 11:00 PM)</ListBox.Item>
+                                                    </ListBox>
+                                                </Select.Popover>
+                                            </Select>
+                                        </div>
+
+                                        {/* Session Start Date */}
+                                        <div>
+                                            <TextField defaultValue={sessionStartDate} name="sessionStartDate" type="date" isRequired>
+                                                <Label>Session Start Date</Label>
+                                                <Input type="date" className="rounded-2xl" />
+                                                <FieldError />
+                                            </TextField>
+                                        </div>
+
+                                        {/* Hourly Fee Rate */}
+                                        <div>
+                                            <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" isRequired>
+                                                <Label>Hourly Rate ($)</Label>
+                                                <Input type="number" placeholder="Hourly Fee" className="rounded-2xl" />
+                                                <FieldError />
+                                            </TextField>
+                                        </div>
+
+                                        {/* Total Slots */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={description} name="description" >
-                                                <Label>About Biography / Overview</Label>
+                                            <TextField defaultValue={totalSlots} name="totalSlots" type="number" isRequired>
+                                                <Label>Total Target Slots Available</Label>
+                                                <Input type="number" placeholder="Total Slots" className="rounded-2xl" />
+                                                <FieldError />
+                                            </TextField>
+                                        </div>
+
+                                        {/* Photo URL */}
+                                        <div className="md:col-span-2">
+                                            <TextField defaultValue={photoUrl} name="photoUrl" isRequired>
+                                                <Label>Profile Image URL</Label>
+                                                <Input type="url" placeholder="Photo URL Link" className="rounded-2xl" />
+                                                <FieldError />
+                                            </TextField>
+                                        </div>
+
+                                        {/* Experience Details Biography */}
+                                        <div className="md:col-span-2">
+                                            <TextField defaultValue={experience} name="experience" isRequired>
+                                                <Label>Professional Experience & Bio</Label>
                                                 <TextArea
-                                                    placeholder="Describe your structural teaching methods and academic background experience..."
-                                                    className="rounded-3xl"
+                                                    placeholder="Describe your background and qualifications details here..."
+                                                    className="rounded-3xl min-h-[100px]"
                                                 />
                                                 <FieldError />
                                             </TextField>
@@ -188,10 +264,10 @@ export function EditModal({ tutor }) {
                                     <Modal.Footer className="px-0 pt-4">
                                         <Button
                                             type="submit"
-                                            slot="close"
+                                            isLoading={isSubmitting}
                                             className="w-full bg-[#BB6984] text-white font-bold rounded-2xl py-5 hover:bg-[#a3536d] transition-colors"
                                         >
-                                            Save Changes
+                                            {isSubmitting ? "Saving Real-Time Form context..." : "Save Changes"}
                                         </Button>
                                     </Modal.Footer>
                                 </form>
