@@ -8,6 +8,7 @@ import { Autoplay, Navigation } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { authClient } from '@/lib/auth-client';
 
 const banners = [
     {
@@ -65,7 +66,10 @@ const Banner = () => {
     const [prevIndex, setPrevIndex] = useState(0);
     const [triggerRipple, setTriggerRipple] = useState(false);
 
-    
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+    const activeUserId = user?.id || user?._id;
+
     useEffect(() => {
         const activeColor = banners[activeIndex].hexColor;
         const event = new CustomEvent('bannerColorChange', { detail: activeColor });
@@ -90,7 +94,7 @@ const Banner = () => {
     }, [activeIndex]);
 
     return (
-        <div className="relative w-full mx-auto min-h-150 py-16 overflow-hidden transition-all duration-300">
+        <div className="relative w-full mx-auto min-h-[80vh] md:min-h-[600px] py-12 md:py-20 flex items-center overflow-hidden transition-all duration-300">
 
             {/* HIDDEN SVG LIQUID DISTORTION FILTER */}
             <svg className="absolute w-0 h-0 pointer-events-none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -127,41 +131,59 @@ const Banner = () => {
                 }}
             />
 
-            <div className="relative container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10">
-                {/* LEFT SIDE */}
-                <div className="w-full max-w-xl h-[320px] flex flex-col justify-center">
-                    <div className="transition-all duration-500 min-h-[160px]">
-                        <span className={`text-xs uppercase font-bold tracking-widest transition-colors duration-500 ${banners[activeIndex].textColor}`}>
+            {/* GRID CONTROL: 
+                - Single column `grid-cols-1` on mobile/tablet (stacks vertically).
+                - Switches to two equal columns `md:grid-cols-2` starting exactly at md (768px).
+            */}
+            <div className="relative container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center z-10">
+
+                {/* LEFT SIDE: Dynamic Text Column */}
+                {/* order-2 puts text below image on mobile, md:order-1 puts it back on left for desktop */}
+                <div className="w-full flex flex-col justify-center text-center md:text-left order-2 md:order-1">
+                    <div className="transition-all duration-500">
+                        <span className={`text-xl sm:text-sm uppercase font-bold tracking-widest transition-colors duration-500 text-[#8f3552]`}>
                             MediQueue Platform
                         </span>
-                        <h1 className="text-3xl md:text-5xl font-black text-gray-800 mt-2 leading-tight">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-800 mt-2 sm:mt-3 leading-tight tracking-tight">
                             {banners[activeIndex].title}
                         </h1>
-                        <p className="py-4 text-gray-600 text-lg leading-relaxed whitespace-normal">
+                        <p className="pt-3 pb-5 sm:py-4 text-gray-600 text-base sm:text-lg leading-relaxed whitespace-normal max-w-xl mx-auto md:mx-0">
                             {banners[activeIndex].description}
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-4 mt-6">
-                        <Link href="/login" className="px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95">
+                    <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center justify-center md:justify-start gap-4 mt-2 sm:mt-4 w-full">
+                        <Link
+                            href={activeUserId ? "/tutors" : "/login"}
+                            className="w-full sm:w-auto md:w-full lg:w-auto text-center px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95"
+                        >
                             Book a Tutor
                         </Link>
-                        <button type="button" className="px-6 py-3 border border-[#aa4465] bg-white/40 backdrop-blur-sm hover:bg-[#aa4465] hover:text-white text-gray-700 flex items-center justify-center gap-3 rounded-xl font-semibold transition-all shadow-sm">
+
+                        <button
+                            type="button"
+                            className="w-full sm:w-auto md:w-full lg:w-auto px-6 py-3 border border-[#aa4465] bg-white/40 backdrop-blur-sm hover:bg-[#aa4465] hover:text-white text-gray-700 flex items-center justify-center gap-3 rounded-xl font-semibold transition-all shadow-sm"
+                        >
                             <FcGoogle size={22} />
                             <span>Sign in with Google</span>
                         </button>
                     </div>
                 </div>
 
-                {/* RIGHT SIDE */}
-                <div className="relative flex flex-col justify-center items-center h-[460px] w-full z-20">
-                    <div className="w-full max-w-lg h-[400px]">
+                {/* RIGHT SIDE: Image Slider Column */}
+                {/* RIGHT SIDE: Polished Image Slider Column */}
+                <div className="relative flex flex-col justify-center items-center w-full order-1 md:order-2 mb-8 md:mb-0">
+                    {/* 1. Fixed aspect-square for uniformity.
+        2. Added p-4 and bg-white/20 to create a "frame" effect.
+        3. rounded-3xl ensures the frame looks modern.
+    */}
+                    <div className="w-full max-w-sm lg:max-w-md aspect-square bg-white/10 backdrop-blur-sm p-4 sm:p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden">
                         <Swiper
                             modules={[Autoplay, Navigation]}
-                            autoplay={{ delay: 4500, disableOnInteraction: false }}
-                            speed={500}
+                            autoplay={{ delay: 5000, disableOnInteraction: false }}
+                            speed={1000}
                             loop={true}
-                            className="h-full w-full overflow-visible"
+                            className="h-full w-full"
                             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                             navigation={{
                                 prevEl: '.swiper-custom-prev',
@@ -169,21 +191,21 @@ const Banner = () => {
                             }}
                         >
                             {banners.map((item) => (
-                                <SwiperSlide key={item.id} className="overflow-visible">
+                                <SwiperSlide key={item.id}>
                                     {({ isActive }) => (
                                         <div
                                             className={`
-                                                w-full h-full transform transition-all duration-1000 ease-out absolute inset-0
-                                                ${isActive
-                                                    ? 'opacity-100 scale-100 translate-x-0 translate-y-0 blur-0 rotate-0 z-30'
-                                                    : 'opacity-0 scale-75 translate-x-32 translate-y-32 blur-md rotate-12 z-10 pointer-events-none'
-                                                }
-                                            `}
+                                w-full h-full transition-all duration-700 ease-in-out flex items-center justify-center
+                                ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+                            `}
                                         >
+                                            {/* object-contain: Forces the image to fit entirely.
+                                p-2: Ensures image never touches the edge of our card frame.
+                            */}
                                             <img
                                                 src={item.imgSrc}
                                                 alt={item.title}
-                                                className="w-full h-full object-cover rounded-2xl shadow-2xl border border-white/60"
+                                                className="w-full h-full object-contain p-2 drop-shadow-2xl"
                                             />
                                         </div>
                                     )}
@@ -192,22 +214,23 @@ const Banner = () => {
                         </Swiper>
                     </div>
 
-                    {/* */}
-                    <div className="flex gap-4 mt-6 z-40">
+                    {/* Refined Navigation Buttons */}
+                    <div className="flex items-center gap-4 mt-8">
                         <button
-                            className="swiper-custom-prev flex items-center justify-center w-12 h-12 rounded-full border border-gray-300/80 bg-white/70 backdrop-blur-sm text-gray-800 font-bold text-lg shadow-md hover:bg-white transition-all transform active:scale-90 select-none cursor-pointer"
+                            className="swiper-custom-prev w-12 h-12 rounded-full border border-[#aa4465]/20 bg-white text-[#aa4465] hover:bg-[#aa4465] hover:text-white transition-all shadow-md flex items-center justify-center active:scale-95"
                             aria-label="Previous Slide"
                         >
                             &#10094;
                         </button>
                         <button
-                            className="swiper-custom-next flex items-center justify-center w-12 h-12 rounded-full border border-gray-300/80 bg-white/70 backdrop-blur-sm text-gray-800 font-bold text-lg shadow-md hover:bg-white transition-all transform active:scale-90 select-none cursor-pointer"
+                            className="swiper-custom-next w-12 h-12 rounded-full border border-[#aa4465]/20 bg-white text-[#aa4465] hover:bg-[#aa4465] hover:text-white transition-all shadow-md flex items-center justify-center active:scale-95"
                             aria-label="Next Slide"
                         >
                             &#10095;
                         </button>
                     </div>
                 </div>
+
             </div>
         </div>
     );

@@ -7,7 +7,7 @@ const TutorPage = async () => {
     const tutors = await res.json();
 
     return (
-        <div className="min-h-screen bg-[#CC8FA3] transition-colors duration-500">
+        <div className="min-h-screen bg-[#AA4465] transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
                 
                 {/* Header Content Section */}
