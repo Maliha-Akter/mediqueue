@@ -15,6 +15,7 @@ import {
 } from "@heroui/react";
 import { BiEdit } from "react-icons/bi";
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 export function EditModal({ tutor }) {
     const {
@@ -42,11 +43,13 @@ export function EditModal({ tutor }) {
         const formData = new FormData(e.currentTarget);
         const updatedTutorData = Object.fromEntries(formData.entries());
 
+        const { data: tokenData } = await authClient.token();
         try {
             const res = await fetch(`http://localhost:5000/tutor/${_id}`, {
                 method: "PATCH",
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${tokenData?.token}`
                 },
                 body: JSON.stringify(updatedTutorData),
             });

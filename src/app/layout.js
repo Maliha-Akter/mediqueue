@@ -3,12 +3,11 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
+import { Providers } from "./providers"; // Import the Providers component
 
 const josefin = Josefin_Sans({
   subsets: ["latin"],
 });
-
-
 
 export const metadata = {
   title: "Create Next App",
@@ -17,18 +16,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${josefin.className} h-full antialiased`}
-    >
+    <html lang="en" className={`${josefin.className} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="grow">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="grow">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
+        
         <ToastContainer
-          position="bottom-center" // Changed from top-right
+          position="bottom-center"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
@@ -37,7 +36,6 @@ export default function RootLayout({ children }) {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light"
         />
       </body>
     </html>

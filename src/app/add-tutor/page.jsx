@@ -2,24 +2,25 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-    Button, 
-    FieldError, 
-    Input, 
-    Label, 
-    ListBox, 
-    TextArea, 
-    TextField, 
-    Select, 
-    Card 
+import {
+    Button,
+    FieldError,
+    Input,
+    Label,
+    ListBox,
+    TextArea,
+    TextField,
+    Select,
+    Card
 } from '@heroui/react';
-import { 
-    FaUserGraduate, 
-    FaBookOpen, 
-    FaDollarSign, 
-    FaClock, 
-    FaMapMarkerAlt, 
-    FaLaptopHouse, 
+
+import {
+    FaUserGraduate,
+    FaBookOpen,
+    FaDollarSign,
+    FaClock,
+    FaMapMarkerAlt,
+    FaLaptopHouse,
     FaImage,
     FaCalendarAlt,
     FaThList,
@@ -34,36 +35,37 @@ const AddTutorPage = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Getting active user identity *session mainly)
+    // Getting active user identity (*session mainly)
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const activeUserId = user?.id || user?._id;
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!activeUserId) {
             toast.error("You must be logged in to create a listing.");
             return;
         }
 
         setIsSubmitting(true);
-        
+
         const formData = new FormData(e.currentTarget);
         const formFields = Object.fromEntries(formData.entries());
-        
+
         const tutorData = {
             ...formFields,
             userId: activeUserId
         };
 
         console.log("Submitting updated payload:", tutorData);
-
+        const { data: tokenData } = await authClient.token();
         try {
             const res = await fetch('http://localhost:5000/tutor', {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${tokenData?.token}`
                 },
                 body: JSON.stringify(tutorData),
             });
@@ -84,15 +86,13 @@ const AddTutorPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-4xl mx-auto space-y-8">
-                
-                {/* HEADER SECTION */}
                 <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                         Tutor Profile Onboarding
                     </h1>
-                    <p className="text-base text-gray-500">
+                    <p className="text-base text-gray-500 dark:text-gray-400">
                         Complete your academic structural credentials and operational schedule layout.
                     </p>
                 </div>
@@ -100,7 +100,7 @@ const AddTutorPage = () => {
                 {/* FORM CONTAINER */}
                 <Card className="border border-gray-200/60 shadow-xl bg-white rounded-2xl">
                     <form onSubmit={onSubmit} className="p-6 md:p-10 space-y-8">
-                        
+
                         {/* SECTION 1: IDENTITY & MEDIA */}
                         <div className="space-y-4">
                             <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-100 pb-2">
@@ -122,10 +122,10 @@ const AddTutorPage = () => {
                                         <Label className="text-gray-700 font-medium text-sm flex items-center gap-2 mb-1">
                                             <FaImage className="text-gray-400" size={14} /> Photo URL (imgbb / postimage link)
                                         </Label>
-                                        <Input 
-                                            type="url" 
-                                            placeholder="https://i.ibb.co/your-image-hash/profile.jpg" 
-                                            className="rounded-xl shadow-sm" 
+                                        <Input
+                                            type="url"
+                                            placeholder="https://i.ibb.co/your-image-hash/profile.jpg"
+                                            className="rounded-xl shadow-sm"
                                         />
                                         <FieldError className="text-xs text-rose-500 mt-1" />
                                     </TextField>

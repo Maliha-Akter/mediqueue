@@ -12,7 +12,6 @@ const ProfilePage = () => {
     const { data: session, isPending } = authClient.useSession();
 
     useEffect(() => {
-        // Only redirect the part if the check is finished and there is no session
         if (!isPending && !session) {
             router.push("/login");
         }
@@ -32,7 +31,7 @@ const ProfilePage = () => {
     const { user } = session;
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
                     {/* Header Banner */}
@@ -42,7 +41,7 @@ const ProfilePage = () => {
                         {/* Profile Picture */}
                         <div className="relative -mt-16 mb-6">
                             <div className="w-32 h-32 rounded-3xl bg-white p-2 shadow-sm">
-                                {user.image ? ( // Ensure this check is robust
+                                {user.image ? ( 
                                     <img src={user.image} alt="Profile" className="w-full h-full rounded-2xl object-cover" />
                                 ) : (
                                     <div className="w-full h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400">

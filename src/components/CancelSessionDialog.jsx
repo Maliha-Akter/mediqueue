@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { AlertDialog, Button } from "@heroui/react";
 import React from "react";
 import { toast } from "react-toastify";
@@ -8,16 +9,19 @@ export function CancelSessionDialog({ booking, onCancelSuccess }) {
     const { _id, tutorName } = booking;
 
     const handleCancelSubmit = async () => {
+        const { data: tokenData } = await authClient.token();
         try {
             const res = await fetch(`http://localhost:5000/booking/cancel/${_id}`, {
                 method: "PATCH",
-                headers: { "content-type": "application/json" }
+                headers: { "content-type": "application/json",
+                    authorization: `Bearer ${tokenData?.token}`
+                 }
             });
 
             if (res.ok) {
                 toast.success(`Session with ${tutorName} has been cancelled`);
                 if (onCancelSuccess) {
-                    onCancelSuccess(_id); // Triggers the UI update
+                    onCancelSuccess(_id); 
                 }
             } else {
                 toast.warning("Failed to cancel session.");

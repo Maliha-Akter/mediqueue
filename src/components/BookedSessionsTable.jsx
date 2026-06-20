@@ -10,7 +10,7 @@ export default function BookedSessionsTable({ initialBookings }) {
 
     if (bookings.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-20 px-6 bg-white border border-dashed border-gray-200 rounded-3xl text-center shadow-sm">
+            <div className="flex flex-col items-center justify-center py-20 px-6  border border-dashed border-gray-200 rounded-3xl text-center shadow-sm">
                 <div className="p-4 bg-[#CC8FA3]/10 text-[#BB6984] rounded-full mb-4">
                     <FiCalendar size={36} />
                 </div>

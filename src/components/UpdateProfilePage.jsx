@@ -29,7 +29,7 @@ const UpdateProfilePage = () => {
         }
 
         toast.success("Profile updated successfully!");
-        router.push("/profile"); // Assuming your profile page is at /profile
+        router.push("/profile"); 
         router.refresh();
     };
 

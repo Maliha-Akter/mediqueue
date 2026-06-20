@@ -1,4 +1,5 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
 import { Button, FieldError, Input, Label, Modal, Surface, TextField } from "@heroui/react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -11,7 +12,8 @@ export function BookSessionModal({ tutor, currentUser }) {
         _id: tutorId,
         tutorName,
         totalSlots,
-        sessionStartDate
+        sessionStartDate,
+        userId: tutorOwnerId 
     } = tutor;
 
     const studentEmail = currentUser?.email || "student@example.com";
@@ -31,12 +33,15 @@ export function BookSessionModal({ tutor, currentUser }) {
     }
 
     // Rules
+    const isOwner = currentUser?.id === tutorOwnerId;
     const isDateBlocked = targetSessionDate && today < targetSessionDate;
     const isSlotBlocked = totalSlots <= 0;
 
     // 2. Logic to handle the click safely
     const handleOpen = () => {
-        if (isSlotBlocked) {
+        if (isOwner) {
+            toast.error("You cannot book your own tutor profile.");
+        } else if (isSlotBlocked) {
             toast.error("This session is fully booked.");
         } else if (isDateBlocked) {
             toast.error("Booking is not available yet for this tutor.");
@@ -48,37 +53,28 @@ export function BookSessionModal({ tutor, currentUser }) {
     const handleBooking = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        const { data: tokenData } = await authClient.token();
 
         const bookingPayload = {
-            tutorId,
-            tutorName,
-            studentName,
-            studentEmail,
-            userId: studentUserId, 
-            phone: formData.get("phone"),
-            bookingStatus: "booked",
-            bookedAt: new Date().toISOString()
+            tutorId, tutorName, studentName, studentEmail,
+            userId: studentUserId, phone: formData.get("phone"),
+            bookingStatus: "booked", bookedAt: new Date().toISOString()
         };
 
         try {
             const res = await fetch("http://localhost:5000/booking", {
                 method: "POST",
-                headers: { "content-type": "application/json" },
+                headers: {
+                    "content-type": "application/json",
+                    authorization: `Bearer ${tokenData?.token}`
+                },
                 body: JSON.stringify(bookingPayload),
             });
-            
-            if (res.ok) {
-                const slotDecrementRes = await fetch(`http://localhost:5000/tutor/${tutorId}`, {
-                    method: "PATCH",
-                    headers: { "content-type": "application/json" },
-                    body: JSON.stringify({ totalSlots: Math.max(0, totalSlots - 1) }),
-                });
 
-                if (slotDecrementRes.ok) {
-                    toast.success("Session Booked Successfully!");
-                    setIsOpen(false); // Close modal on success
-                    setTimeout(() => window.location.reload(), 1500);
-                }
+            if (res.ok) {
+                toast.success("Session Booked Successfully!");
+                setIsOpen(false);
+                setTimeout(() => window.location.reload(), 1500);
             } else {
                 const errData = await res.json();
                 toast.error(errData.message || "Failed to book session.");
@@ -91,15 +87,18 @@ export function BookSessionModal({ tutor, currentUser }) {
     return (
         <>
             {/* 3. The Trigger Button: Controlled by our logic */}
-            <Button 
+            <Button
                 onClick={handleOpen}
+                disabled={isOwner || isSlotBlocked || isDateBlocked}
                 className={`font-bold rounded-xl px-6 py-3 transition-colors w-full ${
-                    isSlotBlocked ? "bg-red-200 text-red-600 cursor-not-allowed" : 
-                    isDateBlocked ? "bg-amber-100 text-amber-700 cursor-not-allowed" : 
+                    isOwner ? "bg-gray-200 text-gray-500 cursor-not-allowed" :
+                    isSlotBlocked ? "bg-red-200 text-red-600 cursor-not-allowed" :
+                    isDateBlocked ? "bg-amber-100 text-amber-700 cursor-not-allowed" :
                     "bg-[#BB6984] hover:bg-[#a3536d] text-white"
                 }`}
             >
-                {isSlotBlocked ? "Fully Booked" : 
+                {isOwner ? "You own this profile" : 
+                 isSlotBlocked ? "Fully Booked" :
                  isDateBlocked ? "Booking not available yet" : "Book Session"}
             </Button>
 

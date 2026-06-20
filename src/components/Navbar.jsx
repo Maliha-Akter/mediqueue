@@ -1,5 +1,5 @@
 'use client';
-
+import { ThemeToggle } from './ThemeToggle';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -84,7 +84,6 @@ const Navbar = () => {
 
         await authClient.signOut();
 
-        // Optional: Add a slight delay so the user sees the transition
         setTimeout(() => {
             router.push('/');
             router.refresh();
@@ -176,6 +175,7 @@ const Navbar = () => {
 
                     {/* RIGHT AUTH CONTROL SECTION */}
                     <div className="flex items-center space-x-6">
+                        <ThemeToggle /> {/* ADD THIS LINE HERE */}
                         {(isPending || isLoggingOut )? (
                             <span className="loading loading-spinner loading-sm text-[#AA4465]"></span>
                         ) : user ? (

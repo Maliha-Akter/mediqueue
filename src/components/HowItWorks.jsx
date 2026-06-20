@@ -12,20 +12,20 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <motion.section 
+    <motion.section
       initial={{ backgroundColor: "#ffffff" }}
       whileInView={{ backgroundColor: "#AA4465" }}
       transition={{ duration: 5, ease: "easeInOut" }}
       viewport={{ once: true, amount: 0.5 }}
-      className="py-24"
+      className="py-24 bg-white dark:bg-gray-950 transition-colors duration-100"
     >
       <div className="container mx-auto px-6 max-w-5xl">
         <div className="text-center mb-20">
-          <motion.h2 
+          <motion.h2
             initial={{ color: "#111827" }}
             whileInView={{ color: "#ffffff" }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="text-4xl font-black"
+            className="text-4xl font-black text-gray-900 dark:text-white"
           >
             How It Works
           </motion.h2>
@@ -37,17 +37,25 @@ const HowItWorks = () => {
             return (
               <div
                 key={step.id}
-                className={`
-                  p-8 bg-white rounded-3xl shadow-lg flex flex-col
-                  ${isLeft ? "md:col-start-1 md:items-start md:text-left" : "md:col-start-2 md:items-end md:text-right"}
-                  items-center text-center
-                `}
+                className={`p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg flex flex-col
+    ${isLeft ? "md:col-start-1 md:items-start md:text-left" : "md:col-start-2 md:items-end md:text-right"}
+    items-center text-center
+  `}
               >
-                <div className="w-16 h-16 bg-[#FFF5F8] rounded-full flex items-center justify-center mb-6">
+                {/* Icon container */}
+                <div className="w-16 h-16 bg-[#FFF5F8] dark:bg-gray-800 rounded-full flex items-center justify-center mb-6">
                   {step.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Step {step.id}: {step.title}</h3>
-                <p className="text-gray-600 text-sm max-w-sm">{step.desc}</p>
+
+                {/* Step Title */}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Step {step.id}: {step.title}
+                </h3>
+
+                {/* Step Description */}
+                <p className="text-gray-600 dark:text-gray-400 text-sm max-w-sm">
+                  {step.desc}
+                </p>
               </div>
             );
           })}

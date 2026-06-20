@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaFacebookF, FaLinkedinIn, FaInstagram, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from 'react-icons/fa';
-// Use the modern X icon for Twitter rebrand compliance
+
 import { FaXTwitter } from 'react-icons/fa6'; 
 
 const Footer = () => {

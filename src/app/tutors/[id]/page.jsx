@@ -18,11 +18,25 @@ const TutorDetailsPage = async ({ params }) => {
     const session = await auth.api.getSession({
         headers: await headers()
     });
+
     const currentUser = session?.user || null;
 
     // 2. Fetching the tutor details
-    
-    const res = await fetch(`http://localhost:5000/tutor/${id}`);
+    const { token } = await auth.api.getToken({
+        headers: await headers()
+    })
+    // Inside TutorDetailsPage
+    const res = await fetch(`http://localhost:5000/tutor/${id}`, {
+        headers: { authorization: `Bearer ${token}` }
+    });
+
+
+    if (!res.ok) {
+        // If status is 401/403/404, stop here
+        console.error("Fetch failed");
+        return <p>Error loading tutor profile.</p>;
+    }
+
     const tutor = await res.json();
 
     // 3. SAFE CHECK: Returning fallback UI if data is missing or empty
@@ -60,13 +74,13 @@ const TutorDetailsPage = async ({ params }) => {
         description,
         email,
         phone,
-        totalSlots 
+        totalSlots
     } = tutor;
 
     const fallbackImage = "/assets/alt-user.png";
     const profileSrc = photoUrl || fallbackImage;
 
-    
+
     const formattedSessionDate = sessionStartDate
         ? new Date(sessionStartDate).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -90,10 +104,10 @@ const TutorDetailsPage = async ({ params }) => {
                     </Link>
 
                     {/* Management Actions (Edit/Delete Modals) */}
-                    <div className="flex justify-end items-center gap-2 w-full sm:w-auto">
+                    {/* <div className="flex justify-end items-center gap-2 w-full sm:w-auto">
                         <EditModal tutor={tutor} />
                         <DeleteDialog tutor={tutor} />
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -229,7 +243,7 @@ const TutorDetailsPage = async ({ params }) => {
                                 </div>
                             </div>
 
-                             <BookSessionModal
+                            <BookSessionModal
                                 tutor={tutor}
                                 currentUser={currentUser}
                                 userId={currentUser?.id || currentUser?._id || null}

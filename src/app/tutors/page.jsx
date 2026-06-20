@@ -1,17 +1,47 @@
+"use client";
 import TutorCard from '@/components/TutorCard';
-import React from 'react';
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const TutorPage = async () => {
-    // Fetching data directly from backend server
-    await delay(2000);
-    const res = await fetch('http://localhost:5000/tutor', { cache: 'no-store' });
-    const tutors = await res.json();
+import React, { useState, useEffect } from 'react';
+
+const TutorPage = () => {
+    const [tutors, setTutors] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    useEffect(() => {
+        const fetchTutors = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/tutor');
+                const data = await res.json();
+                setTutors(data);
+            } catch (error) {
+                console.error("Error fetching tutors:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchTutors();
+    }, []);
+
+    const filteredTutors = tutors.filter(tutor => {
+        const matchesName = tutor.tutorName?.toLowerCase().includes(searchTerm.toLowerCase());
+        const sessionDate = new Date(tutor.sessionStartDate);
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
+
+        const matchesDate =
+            (!start || sessionDate >= start) &&
+            (!end || sessionDate <= end);
+
+        return matchesName && matchesDate;
+    });
 
     return (
-        <div className="min-h-screen bg-[#AA4465] transition-colors duration-500">
-            <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#AA4465] dark:bg-gray-950 py-16 transition-colors duration-500">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Header Content Section */}
+                {/* Header Content Section (Kept intact) */}
                 <div className="mb-12 text-center max-w-2xl mx-auto space-y-3">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-xs font-bold tracking-wider uppercase text-white">
                         Expert Directory
@@ -25,20 +55,66 @@ const TutorPage = async () => {
                     </p>
                 </div>
 
-                {/*card structure */}
-                {tutors?.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto px-4">
-                        {tutors.map((tutor) => (
-                            <TutorCard key={tutor._id || tutor.tutorName} tutor={tutor} />
+                {/* Search & Filter Feature Section */}
+                <div className="max-w-6xl mx-auto mb-12 p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl flex flex-wrap gap-4 items-end shadow-xl transition-colors duration-300">
+                    <div className="flex-1 min-w-[200px]">
+                        <label className="text-sm font-bold block mb-1 text-gray-700 dark:text-gray-300">
+                            Search Tutor
+                        </label>
+                        <input
+                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white p-2 rounded-lg focus:ring-2 focus:ring-[#AA4465] outline-none transition-all"
+                            placeholder="Search tutor by name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="w-[180px]">
+                        <label className="text-sm font-bold block mb-1 text-gray-700 dark:text-gray-300">Start Date</label>
+                        <input
+                            type="date"
+                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white p-2 rounded-lg focus:ring-2 focus:ring-[#AA4465] outline-none transition-all"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="w-[180px]">
+                        <label className="text-sm font-bold block mb-1 text-gray-700 dark:text-gray-300">End Date</label>
+                        <input
+                            type="date"
+                            className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white p-2 rounded-lg focus:ring-2 focus:ring-[#AA4465] outline-none transition-all"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            setSearchTerm("");
+                            setStartDate("");
+                            setEndDate("");
+                        }}
+                        className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-bold text-gray-700 dark:text-gray-300 transition-all"
+                    >
+                        Reset
+                    </button>
+                </div>
+
+                {/* Grid display */}
+                {isLoading ? (
+                    <div className="text-center text-white py-10 font-bold">Loading...</div>
+                ) : filteredTutors.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {filteredTutors.map((tutor) => (
+                            <TutorCard key={tutor._id} tutor={tutor} />
                         ))}
                     </div>
                 ) : (
-                    /* Empty state */
-                    <div className="text-center py-20 bg-white/10 border border-dashed border-white/20 rounded-3xl backdrop-blur-sm mx-4">
-                        <p className="text-white font-medium">No tutors found at the moment.</p>
+                    <div className="text-center py-20 bg-white/10 border border-dashed border-white/20 rounded-3xl mx-auto max-w-6xl">
+                        <p className="text-white font-medium">No tutors found matching your criteria.</p>
                     </div>
                 )}
-
             </div>
         </div>
     );
