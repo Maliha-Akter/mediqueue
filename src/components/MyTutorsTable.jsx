@@ -9,27 +9,12 @@ import { FiBookOpen } from "react-icons/fi";
 export default function MyTutorsTable({ initialTutors }) {
     const [tutors, setTutors] = useState(initialTutors || []);
 
-    // Clean inline updater functions
     const handleUpdate = (id, updatedTutor) => {
-        const updatedTutors = tutors.map((tutor) => {
-            if (tutor._id === id) {
-                return {
-                    ...tutor,
-                    ...updatedTutor,
-                };
-            }
-            return tutor;
-        });
-
-        setTutors(updatedTutors);
+        setTutors(tutors.map((t) => (t._id === id ? { ...t, ...updatedTutor } : t)));
     };
 
     const handleDelete = (id) => {
-        const remainingTutors = tutors.filter(
-            (tutor) => tutor._id !== id
-        );
-
-        setTutors(remainingTutors);
+        setTutors(tutors.filter((t) => t._id !== id));
     };
 
     if (tutors.length === 0) {
@@ -40,7 +25,7 @@ export default function MyTutorsTable({ initialTutors }) {
                 </div>
                 <h3 className="text-xl font-bold text-gray-800">No Tutor Registrations Found</h3>
                 <p className="text-gray-500 max-w-sm mt-1 text-sm">
-                    You haven&apos;t added any tutor profiles yet. Get started by creating your first listing!
+                    You haven't added any tutor profiles yet. Get started by creating your first listing!
                 </p>
                 <Link
                     href="/add-tutor"
@@ -54,7 +39,36 @@ export default function MyTutorsTable({ initialTutors }) {
 
     return (
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
+            
+            {/* MOBILE & TABLET VIEW: Card Stack (Visible on small and medium screens) */}
+            {/* We hide this on large screens (lg:hidden) */}
+            <div className="lg:hidden divide-y divide-gray-100">
+                {tutors.map((tutor) => (
+                    <div key={tutor._id} className="p-5 space-y-4 hover:bg-gray-50/30 transition-colors">
+                        <div className="flex items-center gap-3">
+                            <div className="relative w-12 h-12 rounded-2xl bg-gray-50 overflow-hidden shrink-0 border border-gray-100">
+                                <Image src={tutor.photoUrl || "/assets/alt-user.png"} alt={tutor.tutorName} fill className="object-cover" />
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-gray-900">{tutor.tutorName}</h4>
+                                <p className="text-xs text-gray-400 capitalize">{tutor.subject} • ${tutor.hourlyFee}/hr</p>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-center pt-2">
+                            <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${Number(tutor.totalSlots) > 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"}`}>
+                                {tutor.totalSlots ?? 0} Slots Available
+                            </span>
+                            <div className="flex items-center gap-2">
+                                <EditModal tutor={tutor} onUpdateSuccess={(fields) => handleUpdate(tutor._id, fields)} />
+                                <DeleteDialog tutor={tutor} onDeleteSuccess={() => handleDelete(tutor._id)} />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* DESKTOP VIEW: Table (Hidden on mobile/tablet, visible on large screens) */}
+            <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-50 text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100">
@@ -70,33 +84,24 @@ export default function MyTutorsTable({ initialTutors }) {
                             <tr key={tutor._id} className="hover:bg-gray-50/60 transition-colors">
                                 <td className="py-4 px-6 flex items-center gap-3">
                                     <div className="relative w-12 h-12 rounded-2xl bg-gray-50 overflow-hidden shrink-0 border border-gray-100">
-                                        <Image
-                                            src={tutor.photoUrl || "/assets/alt-user.png"}
-                                            alt={tutor.tutorName}
-                                            fill
-                                            className="object-cover"
-                                        />
+                                        <Image src={tutor.photoUrl || "/assets/alt-user.png"} alt={tutor.tutorName} fill className="object-cover" />
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">{tutor.tutorName}</h4>
                                         <p className="text-xs text-gray-400 font-medium">{tutor.institution || "N/A"}</p>
                                     </div>
                                 </td>
-
                                 <td className="py-4 px-6 text-gray-600 capitalize">{tutor.subject}</td>
-
                                 <td className="py-4 px-6 font-bold text-gray-900">
                                     ${tutor.hourlyFee}<span className="text-xs text-gray-400 font-normal">/hr</span>
                                 </td>
-
                                 <td className="py-4 px-6">
                                     <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${Number(tutor.totalSlots) > 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-500"}`}>
                                         {tutor.totalSlots ?? 0} Slots
                                     </span>
                                 </td>
-
                                 <td className="py-4 px-6 text-right">
-                                    <div className="inline-flex items-center gap-2">
+                                    <div className="inline-flex items-center justify-end gap-2">
                                         <EditModal tutor={tutor} onUpdateSuccess={(fields) => handleUpdate(tutor._id, fields)} />
                                         <DeleteDialog tutor={tutor} onDeleteSuccess={() => handleDelete(tutor._id)} />
                                     </div>

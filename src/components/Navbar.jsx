@@ -11,14 +11,27 @@ const Navbar = () => {
     const router = useRouter();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     const [dynamicBgColor, setDynamicBgColor] = useState('#fdf2f8');
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     // Active user identity session
-    const { data: session } = authClient.useSession();
+    const { data: session, isPending } = authClient.useSession();
     const user = session?.user;
     const activeUserId = user?.id || user?._id;
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isPending) {
+            console.log("Auth State:", session ? "Logged In" : "Logged Out");
+            console.log("Full Session Object:", session);
+        }
+    }, [session, isPending]);
 
     useEffect(() => {
         setIsProfileDropdownOpen(false);
@@ -45,12 +58,10 @@ const Navbar = () => {
         return '#ffffff';
     };
 
-    // Shared path matching check utility
     const isPathActive = (path) => {
         return pathname === path || (path !== '/' && pathname.startsWith(path));
     };
 
-    // Desktop Link Sizing & Active Underline Design
     const getLinkClass = (path) => {
         const isActive = isPathActive(path);
         if (isActive) {
@@ -59,7 +70,6 @@ const Navbar = () => {
         return "text-gray-600 hover:text-[#AA4465] font-medium pb-2 transition-colors duration-200";
     };
 
-    // NEW: Mobile Link Sizing & Left Thick Accent Border Design
     const getMobileLinkClass = (path) => {
         const isActive = isPathActive(path);
         if (isActive) {
@@ -69,11 +79,30 @@ const Navbar = () => {
     };
 
     const handleSignOut = async () => {
-        await authClient.signOut();
+        setIsLoggingOut(true); // Trigger the spinner
         setIsProfileDropdownOpen(false);
-        router.push('/');
-        router.refresh();
+
+        await authClient.signOut();
+
+        // Optional: Add a slight delay so the user sees the transition
+        setTimeout(() => {
+            router.push('/');
+            router.refresh();
+            setIsLoggingOut(false);
+        }, 800); // 800ms delay for better UX
     };
+
+    // If not mounted, render a minimal version to prevent hydration errors
+    if (!mounted) {
+        return (
+            <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 h-16 flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
+                    <div className="text-4xl font-bold text-gray-800">MediQueue</div>
+                    <span className="loading loading-spinner loading-sm text-[#AA4465]"></span>
+                </div>
+            </nav>
+        );
+    }
 
     return (
         <nav
@@ -96,7 +125,6 @@ const Navbar = () => {
                                 </svg>
                             </button>
 
-                            {/* UPDATED: Mobile Dropdown Menu List with increased fonts and active indicators */}
                             <ul
                                 className={`fixed left-0 right-0 w-full bg-white shadow-xl border-b border-gray-200 py-4 px-6 z-40 space-y-1 transition-all duration-500 ease-in-out origin-top ${isMobileMenuOpen
                                     ? 'top-16 opacity-100 visible translate-y-0'
@@ -148,7 +176,9 @@ const Navbar = () => {
 
                     {/* RIGHT AUTH CONTROL SECTION */}
                     <div className="flex items-center space-x-6">
-                        {user ? (
+                        {(isPending || isLoggingOut )? (
+                            <span className="loading loading-spinner loading-sm text-[#AA4465]"></span>
+                        ) : user ? (
                             <div className="relative border-l border-gray-200 pl-4 flex items-center">
                                 <button
                                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -159,7 +189,7 @@ const Navbar = () => {
                                             referrerPolicy="no-referrer"
                                             alt={user?.name || "User"}
                                             src={user?.image}
-                                            className="h-full w-full object-cover"
+                                            className="h-full w-full object-cover cursor-pointer"
                                         />
                                         <Avatar.Fallback className="flex h-full w-full items-center justify-center rounded-full bg-[#AA4465]/10 font-bold text-[#AA4465] text-lg select-none">
                                             {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
@@ -168,7 +198,7 @@ const Navbar = () => {
                                 </button>
 
                                 {isProfileDropdownOpen && (
-                                    <div className="absolute right-0 top-14 mt-2 w-48 rounded-xl shadow-xl py-1 bg-white ring-1 ring-black/5 z-50 overflow-hidden border border-gray-50">
+                                    <div className="absolute right-0 top-14 mt-2 w-48 rounded-xl shadow-xl py-1 bg-white ring-1 ring-black/5 z-50 overflow-hidden border border-gray-50 ">
                                         <div className="px-4 py-2.5 border-b border-gray-100 bg-gray-50/50">
                                             <p className="text-sm font-semibold text-gray-800 truncate">{user?.name}</p>
                                             <p className="text-xs text-gray-500 truncate mt-0.5">{user?.email}</p>
@@ -183,7 +213,7 @@ const Navbar = () => {
 
                                         <button
                                             onClick={handleSignOut}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50/70 font-semibold transition-colors"
+                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50/70 font-semibold transition-colors cursor-pointer"
                                         >
                                             Logout
                                         </button>
@@ -204,7 +234,6 @@ const Navbar = () => {
                             </div>
                         )}
                     </div>
-
                 </div>
             </div>
         </nav>

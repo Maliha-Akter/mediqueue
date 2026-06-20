@@ -1,9 +1,9 @@
 import React from 'react';
 import MyTutorsTable from '@/components/MyTutorsTable';
+// const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Next.js injects URL params directly into server component arguments
 const MyTutorPage = async ({ params }) => {
-    // Await params per Next.js standards
+    // await delay(2000);
     const { id } = await params;
 
     let tutors = [];

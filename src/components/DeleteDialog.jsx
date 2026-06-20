@@ -25,8 +25,9 @@ export function DeleteDialog({ tutor }) {
                 
                 toast.error(`Tutor profile for ${tutorName} deleted successfully`);
                 
-                router.push('/tutors');
-                router.refresh();
+                // router.push('/tutors');
+                // router.refresh();
+                window.location.reload();
             } else {
                 console.error("Failed to delete tutor profile");
                 toast.warning("Failed to remove tutor profile.");

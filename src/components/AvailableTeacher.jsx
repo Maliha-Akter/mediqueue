@@ -63,7 +63,7 @@ const AvailableTeacher = () => {
                         {tutors.map((tutor, index) => (
                             <div
                                 key={tutor._id}
-                                className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden flex flex-col justify-between h-full group hover:-translate-y-2 transition-all duration-300 ease-out"
+                                className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden flex flex-col justify-between h-full group hover:-translate-y-2 transition-all duration-300 ease-out mx-auto w-full max-w-[280px] sm:max-w-none"
                             >
                                 <div className="flex flex-col flex-1">
                                     <div className={`relative h-24 w-full ${cardColors[index % cardColors.length]}`} />
@@ -99,7 +99,7 @@ const AvailableTeacher = () => {
                         ))}
                     </div>
                 )}
-                
+
             </div>
         </section>
     );

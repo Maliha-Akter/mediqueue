@@ -3,7 +3,7 @@
 import { authClient } from '@/lib/auth-client';
 import { Button, Card, FieldError, Form, Input, Label, TextField } from '@heroui/react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation'; // Added useSearchParams
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
@@ -12,9 +12,8 @@ import { toast } from 'react-toastify';
 const LoginPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    // Retrieve the target path, default to home "/"
     const callbackUrl = searchParams.get("callbackUrl") || "/";
-    
+
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = async (e) => {
@@ -36,9 +35,8 @@ const LoginPage = () => {
 
             if (data) {
                 toast.success("Signed in successfully!");
-                // Use the captured callbackUrl
                 router.push(callbackUrl);
-                router.refresh(); 
+                router.refresh();
             }
 
             if (error) {
@@ -56,7 +54,7 @@ const LoginPage = () => {
         try {
             await authClient.signIn.social({
                 provider: "google",
-                callbackURL: callbackUrl, // Pass redirect path to Google flow
+                callbackURL: callbackUrl,
             });
         } catch (err) {
             console.error("Social login processing error:", err);
@@ -67,7 +65,7 @@ const LoginPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-[#CC8FA3]/10 via-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-6">
-                
+
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
                         Welcome Back
@@ -79,7 +77,7 @@ const LoginPage = () => {
 
                 <Card className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
                     <Form onSubmit={onSubmit} validationBehavior="native" className="flex flex-col gap-4">
-                        
+
                         <TextField
                             isRequired
                             name="email"
@@ -96,8 +94,8 @@ const LoginPage = () => {
                                 <span className="absolute left-4 text-gray-400">
                                     <FiMail size={16} />
                                 </span>
-                                <Input 
-                                    placeholder="john@example.com" 
+                                <Input
+                                    placeholder="john@example.com"
                                     className="pl-11 rounded-2xl bg-gray-50 w-full"
                                 />
                             </div>
@@ -109,21 +107,26 @@ const LoginPage = () => {
                             name="password"
                             type="password"
                         >
-                            <Label className="text-gray-700 font-bold text-sm">Password</Label>
-                            <div className="relative mt-1 flex items-center">
+                            <div className="flex justify-between items-center mb-1">
+                                <Label className="text-gray-700 font-bold text-sm">Password</Label>
+                                <Link href="/forgot-password" className="text-xs font-bold text-[#BB6984] hover:underline">
+                                    Forgot password?
+                                </Link>
+                            </div>
+                            <div className="relative flex items-center">
                                 <span className="absolute left-4 text-gray-400">
                                     <FiLock size={16} />
                                 </span>
-                                <Input 
-                                    placeholder="••••••••" 
+                                <Input
+                                    placeholder="••••••••"
                                     className="pl-11 rounded-2xl bg-gray-50 w-full"
                                 />
                             </div>
                             <FieldError className="text-xs font-semibold text-red-500 mt-1" />
                         </TextField>
 
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={isLoading}
                             className="w-full font-bold text-md bg-[#BB6984] text-white hover:bg-[#a3536d] transition-colors duration-200 shadow-md py-6 rounded-2xl mt-2 flex justify-center items-center gap-2"
                         >
@@ -141,9 +144,9 @@ const LoginPage = () => {
                     </div>
 
                     <div>
-                        <Button 
-                            onClick={handleGoogleSignin} 
-                            variant="flat" 
+                        <Button
+                            onClick={handleGoogleSignin}
+                            variant="flat"
                             className="w-full font-bold text-sm bg-gray-50 border border-gray-200 hover:bg-gray-100/70 text-gray-700 transition-colors py-6 rounded-2xl flex items-center justify-center gap-2"
                         >
                             <FcGoogle size={18} /> Sign in with Google
@@ -152,7 +155,11 @@ const LoginPage = () => {
 
                     <p className="text-center text-sm text-gray-500 font-medium pt-2">
                         Don't have an account yet?{" "}
-                        <Link href="/signup" className="text-[#BB6984] font-bold hover:underline">
+                        <Link
+                            // Pass the callbackUrl to the signup page
+                            href={`/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+                            className="text-[#BB6984] font-bold hover:underline"
+                        >
                             Register Now
                         </Link>
                     </p>

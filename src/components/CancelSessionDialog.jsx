@@ -9,21 +9,21 @@ export function CancelSessionDialog({ booking, onCancelSuccess }) {
 
     const handleCancelSubmit = async () => {
         try {
-            //  direct backend app.delete route
-            const res = await fetch(`http://localhost:5000/booking/${_id}`, {
-                method: "DELETE"
+            const res = await fetch(`http://localhost:5000/booking/cancel/${_id}`, {
+                method: "PATCH",
+                headers: { "content-type": "application/json" }
             });
 
             if (res.ok) {
-                toast.error(`Session with ${tutorName} removed successfully`);
+                toast.success(`Session with ${tutorName} has been cancelled`);
                 if (onCancelSuccess) {
-                    onCancelSuccess(_id); // Removes the item from UI state
+                    onCancelSuccess(_id); // Triggers the UI update
                 }
             } else {
-                toast.warning("Failed to clear session booking record.");
+                toast.warning("Failed to cancel session.");
             }
         } catch (error) {
-            console.error("Error executing session deletion:", error);
+            console.error("Error executing session cancellation:", error);
             toast.error("Network error while trying to cancel.");
         }
     };
@@ -47,7 +47,7 @@ export function CancelSessionDialog({ booking, onCancelSuccess }) {
                         <AlertDialog.Body>
                             <p>
                                 Are you sure you want to cancel your session with <strong>{tutorName}</strong>? 
-                                This will permanently delete the booking record.
+                                The status will be updated to cancelled.
                             </p>
                         </AlertDialog.Body>
                         <AlertDialog.Footer>

@@ -1,10 +1,10 @@
 import React from 'react';
 import BookedSessionsTable from '@/components/BookedSessionsTable';
-
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const BookedSessionsPage = async (props) => {
     const params = await props.params;
     const { userId } = params;
-
+await delay(1000);
     let bookings = [];
     if (userId) {
         try {

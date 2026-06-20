@@ -45,8 +45,7 @@ const TutorCard = ({ tutor }) => {
     const profileSrc = photoUrl || fallbackImage;
 
     return (
-        <div className="group flex flex-col h-full overflow-hidden rounded-2xl border border-gray-200/80 bg-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:border-gray-300/40">
-
+       <div className="group flex flex-col h-full overflow-hidden rounded-2xl border border-gray-200/80 bg-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:border-gray-300/40 mx-auto w-full max-w-[320px] sm:max-w-none">
             <div className="relative w-full h-56 sm:h-60 overflow-hidden bg-gray-50 rounded-t-2xl">
                 <div className="absolute inset-0 scale-110 blur-2xl opacity-30 select-none pointer-events-none">
                     <Image src={profileSrc} alt="" fill sizes="10vw" className="object-cover" priority={false} />
@@ -112,7 +111,7 @@ const TutorCard = ({ tutor }) => {
                         variant="flat"
                         className="w-full font-semibold text-md bg-[#BB6984]/10 text-[#BB6984] hover:bg-[#BB6984] hover:text-white transition-all duration-200 rounded-xl py-5"
                     >
-                        <FiExternalLink /> View Full Profile
+                        <FiExternalLink /> Book Session Now
                     </Button>
                 </div>
             </div>

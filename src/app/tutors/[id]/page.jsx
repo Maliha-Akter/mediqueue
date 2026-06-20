@@ -21,10 +21,11 @@ const TutorDetailsPage = async ({ params }) => {
     const currentUser = session?.user || null;
 
     // 2. Fetching the tutor details
+    
     const res = await fetch(`http://localhost:5000/tutor/${id}`);
     const tutor = await res.json();
 
-    // 3. SAFE CHECK: Return fallback UI if data is missing or empty
+    // 3. SAFE CHECK: Returning fallback UI if data is missing or empty
     if (!tutor || Object.keys(tutor).length === 0) {
         return (
             <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 p-4">

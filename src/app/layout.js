@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         </main>
         <Footer />
         <ToastContainer
-          position="top-right"
+          position="bottom-center" // Changed from top-right
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}

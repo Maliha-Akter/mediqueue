@@ -9,7 +9,7 @@ import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const banners = [
     {
@@ -67,6 +67,7 @@ const Banner = () => {
     const [prevIndex, setPrevIndex] = useState(0);
     const [triggerRipple, setTriggerRipple] = useState(false);
 
+
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const activeUserId = user?.id || user?._id;
@@ -94,17 +95,28 @@ const Banner = () => {
         };
     }, [activeIndex]);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
 
     const handleBookClick = () => {
         if (session) {
             router.push("/tutors");
         } else {
-            // Redirect to login and tell it to return here (or to /tutors) after success
-            // Since this is the landing page, we can set the callbackUrl to /tutors
             router.push("/login?callbackUrl=/tutors");
         }
     };
 
+    const handleGoogleSignin = async () => {
+        try {
+            await authClient.signIn.social({
+                provider: "google",
+                callbackURL: callbackUrl,
+            });
+        } catch (err) {
+            console.error("Social login processing error:", err);
+            toast.error("Failed to authenticate with Google.");
+        }
+    };
     return (
         <div className="relative w-full mx-auto min-h-[80vh] md:min-h-[600px] py-12 md:py-20 flex items-center overflow-hidden transition-all duration-300">
 
@@ -131,7 +143,7 @@ const Banner = () => {
                 style={{ backgroundColor: banners[prevIndex].hexColor, zIndex: 0 }}
             />
 
-            {/* LAYER 2: Fluid Ripple Layer */}
+            {/* LAYER 2: Fluid Ripple Layer svg part*/}
             <div
                 className="absolute inset-0"
                 style={{
@@ -163,14 +175,15 @@ const Banner = () => {
                     <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center justify-center md:justify-start gap-4 mt-2 sm:mt-4 w-full">
                         <button
                             onClick={handleBookClick}
-                            className="w-full sm:w-auto md:w-full lg:w-auto text-center px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95"
+                            className="w-full sm:w-auto md:w-full lg:w-auto text-center px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-transparent hover:border hover:border-[#8f3552] hover:text-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95 cursor-pointer"
                         >
                             Book a Tutor
                         </button>
 
                         <button
+                            onClick={handleGoogleSignin}
                             type="button"
-                            className="w-full sm:w-auto md:w-full lg:w-auto px-6 py-3 border border-[#aa4465] bg-white/40 backdrop-blur-sm hover:bg-[#aa4465] hover:text-white text-gray-700 flex items-center justify-center gap-3 rounded-xl font-semibold transition-all shadow-sm"
+                            className="w-full sm:w-auto md:w-full lg:w-auto px-6 py-3 border border-[#aa4465] bg-white/40 backdrop-blur-sm hover:bg-[#aa4465] hover:text-white text-gray-700 flex items-center justify-center gap-3 rounded-xl font-semibold transition-all shadow-sm cursor-pointer"
                         >
                             <FcGoogle size={22} />
                             <span>Sign in with Google</span>
@@ -202,7 +215,7 @@ const Banner = () => {
                                 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
                             `}
                                         >
-                                
+
                                             <img
                                                 src={item.imgSrc}
                                                 alt={item.title}

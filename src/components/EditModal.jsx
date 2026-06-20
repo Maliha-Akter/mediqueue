@@ -89,7 +89,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Tutor Name */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={tutorName} name="tutorName" isRequired>
+                                            <TextField defaultValue={tutorName} name="tutorName" >
                                                 <Label>Full Name</Label>
                                                 <Input placeholder="Tutor Name" className="rounded-2xl" />
                                                 <FieldError />
@@ -98,7 +98,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Institution */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={institution} name="institution" isRequired>
+                                            <TextField defaultValue={institution} name="institution" >
                                                 <Label>Institution</Label>
                                                 <Input placeholder="University Name" className="rounded-2xl" />
                                                 <FieldError />
@@ -155,7 +155,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Location */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={location} name="location" isRequired>
+                                            <TextField defaultValue={location} name="location" >
                                                 <Label>Location / City</Label>
                                                 <Input placeholder="Location Area" className="rounded-2xl" />
                                                 <FieldError />
@@ -213,7 +213,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Session Start Date */}
                                         <div>
-                                            <TextField defaultValue={sessionStartDate} name="sessionStartDate" type="date" isRequired>
+                                            <TextField defaultValue={sessionStartDate} name="sessionStartDate" type="date" >
                                                 <Label>Session Start Date</Label>
                                                 <Input type="date" className="rounded-2xl" />
                                                 <FieldError />
@@ -222,7 +222,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Hourly Fee Rate */}
                                         <div>
-                                            <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" isRequired>
+                                            <TextField defaultValue={hourlyFee} name="hourlyFee" type="number" >
                                                 <Label>Hourly Rate ($)</Label>
                                                 <Input type="number" placeholder="Hourly Fee" className="rounded-2xl" />
                                                 <FieldError />
@@ -231,7 +231,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Total Slots */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={totalSlots} name="totalSlots" type="number" isRequired>
+                                            <TextField defaultValue={totalSlots} name="totalSlots" type="number" >
                                                 <Label>Total Target Slots Available</Label>
                                                 <Input type="number" placeholder="Total Slots" className="rounded-2xl" />
                                                 <FieldError />
@@ -240,7 +240,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Photo URL */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={photoUrl} name="photoUrl" isRequired>
+                                            <TextField defaultValue={photoUrl} name="photoUrl" >
                                                 <Label>Profile Image URL</Label>
                                                 <Input type="url" placeholder="Photo URL Link" className="rounded-2xl" />
                                                 <FieldError />
@@ -249,7 +249,7 @@ export function EditModal({ tutor }) {
 
                                         {/* Experience Details Biography */}
                                         <div className="md:col-span-2">
-                                            <TextField defaultValue={experience} name="experience" isRequired>
+                                            <TextField defaultValue={experience} name="experience" >
                                                 <Label>Professional Experience & Bio</Label>
                                                 <TextArea
                                                     placeholder="Describe your background and qualifications details here..."

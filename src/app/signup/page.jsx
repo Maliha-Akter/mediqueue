@@ -3,7 +3,7 @@
 import { authClient } from '@/lib/auth-client';
 import { Button, Card, Description, FieldError, Form, Input, Label, TextField } from '@heroui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FiUser, FiMail, FiLock, FiImage, FiArrowRight } from 'react-icons/fi';
@@ -11,14 +11,13 @@ import { toast } from 'react-toastify';
 
 const SignUpPage = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        if (!e.currentTarget.checkValidity()) {
-            return;
-        }
+        if (!e.currentTarget.checkValidity()) return;
 
         setIsLoading(true);
         const formdata = new FormData(e.currentTarget);
@@ -33,15 +32,15 @@ const SignUpPage = () => {
             });
 
             if (data) {
-                toast.success("Account created successfully!");
-                router.push("/");
+                await authClient.signOut();
+                toast.success("Account created successfully! Please log in.");
+                router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
             }
 
             if (error) {
                 toast.error(error.message || "An authentication issue occurred.");
             }
         } catch (err) {
-            console.error("Signup exception breakdown error:", err);
             toast.error("Connection failed during registration.");
         } finally {
             setIsLoading(false);
@@ -52,9 +51,9 @@ const SignUpPage = () => {
         try {
             await authClient.signIn.social({
                 provider: "google",
+                callbackURL: callbackUrl, 
             });
         } catch (err) {
-            console.error("Social login exception:", err);
             toast.error("Failed to connect via Google.");
         }
     };

@@ -28,14 +28,13 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { authClient } from '@/lib/auth-client';
-// Import your authClient configuration file here
-// import { authClient } from "@/lib/auth"; 
+
 
 const AddTutorPage = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Get active user identity session
+    // Getting active user identity *session mainly)
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const activeUserId = user?.id || user?._id;
@@ -53,7 +52,6 @@ const AddTutorPage = () => {
         const formData = new FormData(e.currentTarget);
         const formFields = Object.fromEntries(formData.entries());
         
-        // Combine form fields and seamlessly trace ownership back to the posting creator
         const tutorData = {
             ...formFields,
             userId: activeUserId

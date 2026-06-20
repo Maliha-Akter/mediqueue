@@ -8,14 +8,12 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
     return (
-        /* Reversed styling: Clean white background with structural border line */
         <footer className="relative w-full bg-white text-gray-600 border-t border-gray-100 transition-all duration-300 z-30">
-            <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 
                 {/* COLUMN 1: BRAND PLATFORM */}
                 <div className="flex flex-col gap-3">
-                    {/* FIXED LOGO: Exact matching typographic weight and branding syntax as the Navbar */}
-                    <Link href="/" className="text-4xl font-bold tracking-tight text-gray-800 transition-colors duration-300">
+                   <Link href="/" className="text-4xl font-bold tracking-tight text-gray-800 transition-colors duration-300">
                         Medi<span style={{ color: '#aa4465' }}>Queue</span>
                     </Link>
                     <p className="text-sm text-gray-500 leading-relaxed mt-1">
