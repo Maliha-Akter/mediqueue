@@ -9,55 +9,56 @@ import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 const banners = [
     {
         id: 1,
         title: "Connect with Expert Tutors",
-        description: "Discover experienced tutors across various subjects and accelerate your learning journey.",
+        description: "Gain personalized guidance from vetted subject-matter experts dedicated to your academic growth.",
         textColor: "text-[#0F2042]",
         hexColor: "#BAD3D8",
-        imgSrc: "https://images.openai.com/static-rsc-4/ROTXnz1e34ij3j0hTOSVQYcfh1aeeIoiIoodlKHpJcXqzrRvxkIt6jlCEyq1-YAfWmPqNFJsLXkWgnbQm6gWvGmbQf94ke8wn85dCNBSGAY7GhEeG02YNK-bNkS0Ug8TzoiuR9D2hr_L1xp3v-m_i_8MdiMWq0S9wDJGXnpYvcRR2yo6X6KvPTpr5RYAtHji?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/YBR9qLjV/h1.jpg"
     },
     {
         id: 2,
-        title: "Easy Tutor Booking",
-        description: "Book your preferred tutor in just a few clicks with our streamlined scheduling system.",
+        title: "Effortless Tutor Booking",
+        description: "Skip the back-and-forth emails. Secure your perfect tutor instantly with our seamless booking flow.",
         textColor: "text-[#2E133C]",
         hexColor: "#AE92C3",
-        imgSrc: "https://images.openai.com/static-rsc-4/cyg8DeOhjSOyFmTF34RpXKnzaL0REMTayF1uCh6SFWznn6uhmh5Y9lPyw1wVsN8gu3DusC1aMPopJu7WYHINra125bIOApyQrxsDYmM7sUANdLVNJT5J6qhBAWmaSpsiXk7D6aQcOwiqKZfg4PEC2RMYYwPSePTpYnr04TypANDJdXzLDsBT7Mc7os2F38kT?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/5WrzwKfB/h2.jpg"
     },
     {
         id: 3,
-        title: "Flexible Learning Sessions",
-        description: "Choose convenient time slots and learn at your own pace from anywhere.",
+        title: "Learning on Your Terms",
+        description: "Master new skills at your own pace with flexible sessions that fit perfectly into your busy life.",
         textColor: "text-[#0F172A]",
         hexColor: "#BEE1FF",
-        imgSrc: "https://images.openai.com/static-rsc-4/17IzGC3tO2fYUG4D6rg7HmeURgUbOdXrqsQlyZvgffcY8g4_0K0MgzP8AcpTlwgTu_HR1EZ-QuSE4Ref8-99T2Wr8tZoPkOkIbxH889Yh6l-qkxBCu4CWAPOeCkZgHjx1geDBrzCrQ0Kx1O2ACh-JqL953SPZG3EcsYpnrydmx5cv8uxMTQwRTTWw2Sqhi0v?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/ZCx8PTV/h3.jpg"
     },
     {
         id: 4,
-        title: "Secure Digital Session Tokens",
-        description: "Get instant booking confirmations and unique session tokens for every class.",
+        title: "Secure, Verified Sessions",
+        description: "Rest easy with encrypted booking confirmations and unique access tokens for every private session.",
         textColor: "text-[#6D28D9]",
         hexColor: "#FEF7DB",
-        imgSrc: "https://images.openai.com/static-rsc-4/Ci9auDJcJOyYc5jO9qXnEeiv6oUHiUVgc0GIqyGkehYo0XlOOSnJrCaU1wlM72DaVox-J8BieTwMQk824D4etj2D9mtXDo4g9SV5JgdneobnNELAeo9L2vjpSZAAqUiq72NjJz94AyP5JF5UE805fojvHTMeFdEl7dr6_axRx_SX2A2G4Y2VDTkMRJejCqsx?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/qYgmz3FP/h4.jpg"
     },
     {
         id: 5,
-        title: "No More Scheduling Conflicts",
-        description: "Our smart booking system prevents overlapping sessions and ensures smooth coordination.",
+        title: "Conflict-Free Scheduling",
+        description: "Our intelligent calendar syncs in real-time, eliminating double-bookings and scheduling stress.",
         textColor: "text-[#B45309]",
         hexColor: "#C5D5A8",
-        imgSrc: "https://images.openai.com/static-rsc-4/_GH_5zuonyD4e-3XAGrcLgQIgvsuNVGZSDSb_SsxkOzoKxRoyWr_2LvT8FO2Zd_YkwmzyBbY7SbepdNNh6jPjaRDqJXVlJWgAVaA7w55LcyRL1t8m29Sruwgdvz5ck74IyLq0hf2yUSB9HggsmVuaO7MXKDsxi_LfJ75QsRn28QHO8YeES9ScTkwcSQVafJC?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/FqCGt5p1/h5.jpg"
     },
     {
         id: 6,
-        title: "Your Success Starts Here",
-        description: "Join MediQueue today and make learning more organized, accessible, and effective.",
+        title: "Unlock Your Potential",
+        description: "Join the MediQueue community today and transform the way you learn, grow, and achieve your goals.",
         textColor: "text-[#aa4465]",
         hexColor: "#A6E0E2",
-        imgSrc: "https://images.openai.com/static-rsc-4/gwh8PBiyUZtVi9AGTUUokRwWSEe1tsifbDyZirnS7KfPEy_8DAjLhEtqfCqDBS0p5FuEqtXebylEEbEXfhYBBJSAXO0Fe_-qGgk_tYMQkPFLR7j8YT6iYnI2M55YUNdwqFPrRNzdv4lsVBBrz8P1IoPmGxlZVC2sLCKWRxfhrUmIA8vHS4uhiVFDdKx35Ik_?purpose=fullsize"
+        imgSrc: "https://i.ibb.co.com/mVPSbzms/h6.jpg"
     }
 ];
 
@@ -92,6 +93,17 @@ const Banner = () => {
             clearTimeout(syncLayers);
         };
     }, [activeIndex]);
+    const router = useRouter();
+
+    const handleBookClick = () => {
+        if (session) {
+            router.push("/tutors");
+        } else {
+            // Redirect to login and tell it to return here (or to /tutors) after success
+            // Since this is the landing page, we can set the callbackUrl to /tutors
+            router.push("/login?callbackUrl=/tutors");
+        }
+    };
 
     return (
         <div className="relative w-full mx-auto min-h-[80vh] md:min-h-[600px] py-12 md:py-20 flex items-center overflow-hidden transition-all duration-300">
@@ -131,14 +143,10 @@ const Banner = () => {
                 }}
             />
 
-            {/* GRID CONTROL: 
-                - Single column `grid-cols-1` on mobile/tablet (stacks vertically).
-                - Switches to two equal columns `md:grid-cols-2` starting exactly at md (768px).
-            */}
+
             <div className="relative container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center z-10">
 
                 {/* LEFT SIDE: Dynamic Text Column */}
-                {/* order-2 puts text below image on mobile, md:order-1 puts it back on left for desktop */}
                 <div className="w-full flex flex-col justify-center text-center md:text-left order-2 md:order-1">
                     <div className="transition-all duration-500">
                         <span className={`text-xl sm:text-sm uppercase font-bold tracking-widest transition-colors duration-500 text-[#8f3552]`}>
@@ -153,12 +161,12 @@ const Banner = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-center justify-center md:justify-start gap-4 mt-2 sm:mt-4 w-full">
-                        <Link
-                            href={activeUserId ? "/tutors" : "/login"}
+                        <button
+                            onClick={handleBookClick}
                             className="w-full sm:w-auto md:w-full lg:w-auto text-center px-6 py-3 bg-[#aa4465] text-white rounded-xl font-semibold hover:bg-[#8f3552] transition-all shadow-md hover:shadow-lg transform active:scale-95"
                         >
                             Book a Tutor
-                        </Link>
+                        </button>
 
                         <button
                             type="button"
@@ -171,12 +179,7 @@ const Banner = () => {
                 </div>
 
                 {/* RIGHT SIDE: Image Slider Column */}
-                {/* RIGHT SIDE: Polished Image Slider Column */}
                 <div className="relative flex flex-col justify-center items-center w-full order-1 md:order-2 mb-8 md:mb-0">
-                    {/* 1. Fixed aspect-square for uniformity.
-        2. Added p-4 and bg-white/20 to create a "frame" effect.
-        3. rounded-3xl ensures the frame looks modern.
-    */}
                     <div className="w-full max-w-sm lg:max-w-md aspect-square bg-white/10 backdrop-blur-sm p-4 sm:p-6 rounded-3xl border border-white/20 shadow-xl relative overflow-hidden">
                         <Swiper
                             modules={[Autoplay, Navigation]}
@@ -199,9 +202,7 @@ const Banner = () => {
                                 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
                             `}
                                         >
-                                            {/* object-contain: Forces the image to fit entirely.
-                                p-2: Ensures image never touches the edge of our card frame.
-                            */}
+                                
                                             <img
                                                 src={item.imgSrc}
                                                 alt={item.title}

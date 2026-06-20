@@ -3,7 +3,7 @@
 import { authClient } from '@/lib/auth-client';
 import { Button, Card, FieldError, Form, Input, Label, TextField } from '@heroui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; // Added useSearchParams
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
@@ -11,6 +11,10 @@ import { toast } from 'react-toastify';
 
 const LoginPage = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    // Retrieve the target path, default to home "/"
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = async (e) => {
@@ -32,8 +36,9 @@ const LoginPage = () => {
 
             if (data) {
                 toast.success("Signed in successfully!");
-                router.push("/");
-                router.refresh(); // Refresh page context to update global auth status
+                // Use the captured callbackUrl
+                router.push(callbackUrl);
+                router.refresh(); 
             }
 
             if (error) {
@@ -51,6 +56,7 @@ const LoginPage = () => {
         try {
             await authClient.signIn.social({
                 provider: "google",
+                callbackURL: callbackUrl, // Pass redirect path to Google flow
             });
         } catch (err) {
             console.error("Social login processing error:", err);
@@ -62,7 +68,6 @@ const LoginPage = () => {
         <div className="min-h-screen bg-gradient-to-b from-[#CC8FA3]/10 via-gray-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-6">
                 
-                {/* Header  */}
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
                         Welcome Back
@@ -72,12 +77,9 @@ const LoginPage = () => {
                     </p>
                 </div>
 
-                {/* Main Form  */}
                 <Card className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-                    
                     <Form onSubmit={onSubmit} validationBehavior="native" className="flex flex-col gap-4">
                         
-                        {/* Email Address Input */}
                         <TextField
                             isRequired
                             name="email"
@@ -102,7 +104,6 @@ const LoginPage = () => {
                             <FieldError className="text-xs font-semibold text-red-500 mt-1" />
                         </TextField>
 
-                        {/* Password Input */}
                         <TextField
                             isRequired
                             name="password"
@@ -121,18 +122,16 @@ const LoginPage = () => {
                             <FieldError className="text-xs font-semibold text-red-500 mt-1" />
                         </TextField>
 
-                        {/* Form Submit Button */}
                         <Button 
                             type="submit" 
                             disabled={isLoading}
                             className="w-full font-bold text-md bg-[#BB6984] text-white hover:bg-[#a3536d] transition-colors duration-200 shadow-md py-6 rounded-2xl mt-2 flex justify-center items-center gap-2"
                         >
-                            {isLoading ? "Verifying Credentials..." : "Log In"}
+                            {isLoading ? "Verifying..." : "Log In"}
                             {!isLoading && <FiArrowRight size={16} />}
                         </Button>
                     </Form>
 
-                    {/*  Separator Divider */}
                     <div className="flex items-center gap-3 my-2">
                         <div className="h-[1px] bg-gray-100 flex-grow" />
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
@@ -141,7 +140,6 @@ const LoginPage = () => {
                         <div className="h-[1px] bg-gray-100 flex-grow" />
                     </div>
 
-                    {/* OAuth Google Button  */}
                     <div>
                         <Button 
                             onClick={handleGoogleSignin} 
@@ -152,7 +150,6 @@ const LoginPage = () => {
                         </Button>
                     </div>
 
-                 
                     <p className="text-center text-sm text-gray-500 font-medium pt-2">
                         Don't have an account yet?{" "}
                         <Link href="/signup" className="text-[#BB6984] font-bold hover:underline">

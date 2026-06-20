@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBookOpen, FaClock, FaDollarSign, FaShieldAlt } from "react-icons/fa";
 
 const WhyChooseUs = () => {
@@ -10,44 +9,66 @@ const WhyChooseUs = () => {
     { title: 'Affordable Rates', icon: <FaDollarSign className="w-8 h-8" />, desc: 'Match your specific budget.' },
     { title: 'Secure Platform', icon: <FaShieldAlt className="w-8 h-8" />, desc: 'Safe and reliable booking.' },
   ];
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // If not mounted yet, return a skeleton or null to prevent hydration mismatch
+  if (!isMounted) return null;
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-black text-gray-900 text-center mb-20">Why Choose MediQueue?</h2>
+    <section className="py-16 md:py-24 bg-white overflow-hidden">
+      <div className="container mx-auto px-5 md:px-6">
+        <h2 className="text-3xl md:text-4xl font-black text-gray-900 text-center mb-12 md:mb-20">
+          Why Choose MediQueue?
+        </h2>
 
-        <div className="flex flex-wrap justify-center items-center min-h-[400px] [perspective:1000px]">
-          {features.map((item, index) => {
-            const rotation = (index - (features.length - 1) / 2) * 8; 
-            
-            return (
-              <div
-                key={index}
-                className="group relative w-56 h-72 bg-white rounded-3xl shadow-lg border-[1.5px] border-[#AA4465]/20 p-6 flex flex-col items-center text-center transition-all duration-500 ease-out hover:!translate-y-[-50px] hover:!rotate-0 hover:shadow-2xl cursor-pointer animate-[floating_4s_ease-in-out_infinite]"
-                style={{
-                  transform: `rotate(${rotation}deg)`,
-                  marginLeft: index === 0 ? '0' : '-20px',
-                  zIndex: index,
-                  animationDelay: `${index * 1}s`,
-                  animationDuration: `${4 + index}s`
-                }}
-              >
-                {/* Icon Rendering */}
-                <div className="text-[#aa4465] mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  {item.icon}
-                </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex justify-items-center lg:justify-center items-center gap-6 lg:gap-0 lg:min-h-[400px] lg:[perspective:1000px]">
+          {features.map((item, index) => (
+            <div
+              key={index}
+              className="
+                group relative 
+                w-full max-w-[240px] 
+                h-60 lg:h-72
+                bg-white rounded-3xl shadow-lg border-[1.5px] border-[#AA4465]/20 
+                p-5 lg:p-6 flex flex-col items-center text-center transition-all duration-500 ease-out
                 
-                {/* Text Content */}
-                <h3 className="text-[#AA4465] font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                /* Animations only on large screens */
+                md:animate-[floating_4s_ease-in-out_infinite]
+                md:hover:!translate-y-[-50px] lg:hover:!rotate-0 
                 
-                {/* Decorative Identifier */}
-                <div className="absolute top-4 left-4 text-[#AA4465]/10 font-black text-2xl">
-                    {item.title[0]}
-                </div>
+                /* Standard hover for all */
+                hover:shadow-2xl hover:-translate-y-2 cursor-pointer
+              "
+              style={{
+                // Rotation and Negative Margin ONLY on large screens
+                transform: typeof window !== 'undefined' && window.innerWidth >= 1024
+                  ? `rotate(${(index - (features.length - 1) / 2) * 8}deg)`
+                  : 'none',
+                marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024
+                  ? '-20px'
+                  : '0px',
+                animationDelay: `${index * 1}s`,
+                animationDuration: `${4 + index}s`
+              }}
+            >
+              <div className="text-[#aa4465] mb-3 group-hover:scale-110 transition-transform duration-300">
+                {item.icon}
               </div>
-            );
-          })}
+              <h3 className="text-[#AA4465] font-bold text-base lg:text-lg mb-2">
+                {item.title}
+              </h3>
+              <p className="text-gray-500 text-xs lg:text-sm leading-relaxed">
+                {item.desc}
+              </p>
+              <div className="absolute top-3 left-3 text-[#AA4465]/10 font-black text-xl">
+                {item.title[0]}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
