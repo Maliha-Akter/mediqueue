@@ -60,7 +60,7 @@ export function DeleteDialog({ tutor }) {
                             </p>
                         </AlertDialog.Body>
                         <AlertDialog.Footer>
-                            <Button slot="close" variant="tertiary" className="rounded-xl">
+                            <Button slot="close" variant="tertiary" className="rounded-xl dark:text-white">
                                 Cancel
                             </Button>
                             <Button onClick={handleDelete} slot="close" variant="danger" className="rounded-xl">

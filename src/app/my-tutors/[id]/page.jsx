@@ -3,7 +3,9 @@ import MyTutorsTable from '@/components/MyTutorsTable';
 import { auth } from "@/lib/auth"; 
 import { headers } from "next/headers";
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+export const metadata = {
+  title: "My Tutors",
+};
 const MyTutorPage = async ({ params }) => {
     // await delay(2000);
     const { id } = await params;

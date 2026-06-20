@@ -3,6 +3,9 @@ import BookedSessionsTable from '@/components/BookedSessionsTable';
 import { auth } from "@/lib/auth"; 
 import { headers } from "next/headers";
 
+export const metadata = {
+  title: "My Booked Sessions",
+};
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const BookedSessionsPage = async (props) => {
     const params = await props.params;

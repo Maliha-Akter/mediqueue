@@ -176,7 +176,7 @@ const Navbar = () => {
                     {/* RIGHT AUTH CONTROL SECTION */}
                     <div className="flex items-center space-x-6">
                         <ThemeToggle /> {/* ADD THIS LINE HERE */}
-                        {(isPending || isLoggingOut )? (
+                        {(isPending || isLoggingOut) ? (
                             <span className="loading loading-spinner loading-sm text-[#AA4465]"></span>
                         ) : user ? (
                             <div className="relative border-l border-gray-200 pl-4 flex items-center">
@@ -206,7 +206,10 @@ const Navbar = () => {
 
                                         <Link
                                             href="/profile"
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                            className={`block px-4 py-2 text-sm transition-all duration-200 ${isPathActive('/profile')
+                                                    ? 'text-[#AA4465] font-bold bg-[#AA4465]/5 border-l-4 border-[#AA4465] pl-3'
+                                                    : 'text-gray-700 hover:bg-gray-50 border-l-4 border-transparent'
+                                                }`}
                                         >
                                             My Profile
                                         </Link>

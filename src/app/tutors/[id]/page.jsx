@@ -11,6 +11,10 @@ import EditModal from '@/components/EditModal';
 import BookSessionModal from '@/components/BookSessionModal';
 import { auth } from '@/lib/auth';
 
+export const metadata = {
+  title: "Tutor Details",
+};
+
 const TutorDetailsPage = async ({ params }) => {
     const { id } = await params;
 
