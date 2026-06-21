@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import TutorCard from './TutorCard';
+import LoadingClientPage from './LoadingClientPage';
 export const metadata = {
   title: "Tutors", 
 };
@@ -105,7 +106,7 @@ const TutorsClient = () => {
 
                 {/* Grid display */}
                 {isLoading ? (
-                    <div className="text-center text-white py-10 font-bold">Loading...</div>
+                    <div className="text-center text-white py-10 font-bold"><LoadingClientPage /></div>
                 ) : filteredTutors.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {filteredTutors.map((tutor) => (

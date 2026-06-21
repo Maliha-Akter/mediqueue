@@ -129,7 +129,7 @@ const BannerComponent = () => {
                             <animate
                                 attributeName="baseFrequency"
                                 values="0.02 0.05; 0.04 0.09; 0.02 0.05"
-                                dur="5s"
+                                dur="2s"
                                 repeatCount="indefinite"
                             />
                         </feTurbulence>
