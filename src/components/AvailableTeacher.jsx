@@ -11,13 +11,13 @@ const AvailableTeacher = () => {
 
     useEffect(() => {
         const fetchTutors = async () => {
-            const { data: tokenData } = await authClient.token();
+            // const { data: tokenData } = await authClient.token();
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/featured-tutors`, {
                     cache: 'no-store',
                     headers: {
                         'Content-Type': 'application/json',
-                        authorization: `Bearer ${tokenData?.token}`
+                        // authorization: `Bearer ${tokenData?.token}`
                     },
                 });
                 if (response.ok) {
