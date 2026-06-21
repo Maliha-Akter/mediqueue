@@ -49,13 +49,13 @@ export function CancelSessionDialog({ booking, onCancelSuccess }) {
                             <AlertDialog.Heading>Cancel Appointment?</AlertDialog.Heading>
                         </AlertDialog.Header>
                         <AlertDialog.Body>
-                            <p>
+                            <p className="dark:text-white">
                                 Are you sure you want to cancel your session with <strong>{tutorName}</strong>? 
                                 The status will be updated to cancelled.
                             </p>
                         </AlertDialog.Body>
                         <AlertDialog.Footer>
-                            <Button slot="close" variant="tertiary" className="rounded-xl">
+                            <Button slot="close" variant="tertiary" className="rounded-xl dark:text-white">
                                 Keep Session
                             </Button>
                             <Button onClick={handleCancelSubmit} slot="close" variant="danger" className="rounded-xl">

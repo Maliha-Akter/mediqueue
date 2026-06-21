@@ -15,7 +15,7 @@ const HowItWorks = () => {
     <motion.section
       initial={{ backgroundColor: "#ffffff" }}
       whileInView={{ backgroundColor: "#AA4465" }}
-      transition={{ duration: 5, ease: "easeInOut" }}
+      transition={{ duration: 1, ease: "easeInOut" }}
       viewport={{ once: true, amount: 0.5 }}
       className="py-24 bg-white dark:bg-gray-950 transition-colors duration-100"
     >
@@ -37,7 +37,7 @@ const HowItWorks = () => {
             return (
               <div
                 key={step.id}
-                className={`p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg flex flex-col
+                className={`p-8 bg-white dark:bg-gray-700 rounded-3xl shadow-lg flex flex-col
     ${isLeft ? "md:col-start-1 md:items-start md:text-left" : "md:col-start-2 md:items-end md:text-right"}
     items-center text-center
   `}

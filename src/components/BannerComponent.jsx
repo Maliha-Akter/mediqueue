@@ -99,11 +99,12 @@ const BannerComponent = () => {
     const callbackUrl = searchParams.get("callbackUrl") || "/";
 
     const handleBookClick = () => {
-        if (session) {
-            router.push("/tutors");
-        } else {
-            router.push("/login?callbackUrl=/tutors");
-        }
+        // if (session) {
+        //     router.push("/tutors");
+        // } else {
+        //     router.push("/login?callbackUrl=/tutors");
+        // }
+        router.push("/tutors");
     };
 
     const handleGoogleSignin = async () => {
