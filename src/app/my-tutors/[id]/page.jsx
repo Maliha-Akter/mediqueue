@@ -1,10 +1,10 @@
 import React from 'react';
 import MyTutorsTable from '@/components/MyTutorsTable';
-import { auth } from "@/lib/auth"; 
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export const metadata = {
-  title: "My Tutors",
+    title: "My Tutors",
 };
 const MyTutorPage = async ({ params }) => {
     // await delay(2000);
@@ -13,9 +13,10 @@ const MyTutorPage = async ({ params }) => {
         headers: await headers()
     })
     let tutors = [];
+
     if (id) {
         try {
-            const res = await fetch(`http://localhost:5000/my-tutors/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-tutors/${id}`, {
                 cache: 'no-store',
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -23,11 +24,14 @@ const MyTutorPage = async ({ params }) => {
                 },
 
             });
-            if (res.ok) {
-                tutors = await res.json();
+            if (!res.ok) {
+                throw new Error("Failed to fetch managed tutors.");
             }
+            tutors = await res.json();
+
         } catch (error) {
             console.error("Failed to retrieve user specific tutor listings:", error);
+            throw error;
         }
     }
 

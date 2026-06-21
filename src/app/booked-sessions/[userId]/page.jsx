@@ -17,7 +17,7 @@ const BookedSessionsPage = async (props) => {
     })
     if (userId) {
         try {
-            const res = await fetch(`http://localhost:5000/booking/${userId}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${userId}`, {
                 cache: 'no-store',
                 headers: {
                     authorization: `Bearer ${token}`,

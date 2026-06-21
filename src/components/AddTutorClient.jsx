@@ -61,7 +61,7 @@ const AddTutorClient = () => {
         console.log("Submitting updated payload:", tutorData);
         const { data: tokenData } = await authClient.token();
         try {
-            const res = await fetch('http://localhost:5000/tutor', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutor`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

@@ -30,15 +30,15 @@ const TutorDetailsPage = async ({ params }) => {
         headers: await headers()
     })
     // Inside TutorDetailsPage
-    const res = await fetch(`http://localhost:5000/tutor/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tutor/${id}`, {
         headers: { authorization: `Bearer ${token}` }
     });
 
 
     if (!res.ok) {
-        // If status is 401/403/404, stop here
-        console.error("Fetch failed");
-        return <p>Error loading tutor profile.</p>;
+        // console.error("Fetch failed");
+        // return <p>Error loading tutor profile.</p>;
+        throw new Error("Failed to fetch tutor details.");
     }
 
     const tutor = await res.json();

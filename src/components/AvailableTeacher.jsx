@@ -12,7 +12,7 @@ const AvailableTeacher = () => {
     useEffect(() => {
         const fetchTutors = async () => {
             try {
-                const response = await fetch('http://localhost:5000/featured-tutors', { cache: 'no-store' });
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/featured-tutors`, { cache: 'no-store' });
                 if (response.ok) {
                     const data = await response.json();
                     setTutors(data);

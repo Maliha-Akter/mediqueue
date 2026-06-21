@@ -11,7 +11,7 @@ export function CancelSessionDialog({ booking, onCancelSuccess }) {
     const handleCancelSubmit = async () => {
         const { data: tokenData } = await authClient.token();
         try {
-            const res = await fetch(`http://localhost:5000/booking/cancel/${_id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/booking/cancel/${_id}`, {
                 method: "PATCH",
                 headers: { "content-type": "application/json",
                     authorization: `Bearer ${tokenData?.token}`
