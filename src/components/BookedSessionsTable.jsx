@@ -14,8 +14,8 @@ export default function BookedSessionsTable({ initialBookings }) {
                 <div className="p-4 bg-[#CC8FA3]/10 text-[#BB6984] rounded-full mb-4">
                     <FiCalendar size={36} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800">No Booked Sessions Found</h3>
-                <p className="text-gray-500 max-w-sm mt-2 text-base">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white">No Booked Sessions Found</h3>
+                <p className="text-gray-500 max-w-sm mt-2 text-base dark:text-white">
                     You haven't scheduled any tutoring sessions yet. Start your journey today!
                 </p>
                 <Link
