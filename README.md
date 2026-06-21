@@ -1,6 +1,6 @@
 # MediQueue - Smart Tutor Booking Platform
 
-🔗 **Live Site:** [Insert your Vercel/Live URL here]
+🔗 **Live Site:** [https://mediqueue-kohl.vercel.app/]
 
 ## 📖 Project Overview
 
@@ -67,52 +67,3 @@ The platform ensures efficient scheduling, prevents booking conflicts, and helps
 
 * Better Auth
 
----
-
-## 🚀 Getting Started
-
-### Clone the Repository
-
-```bash
-git clone <repository-url>
-```
-
-### Install Dependencies
-
-```bash
-npm install
-```
-
-### Run the Development Server
-
-```bash
-npm run dev
-```
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-### Start Production Server
-
-```bash
-npm start
-```
-
----
-
-## 📌 Future Improvements
-
-* Online payment integration
-* Tutor rating and review system
-* Video session integration
-* Email and SMS notifications
-* Advanced tutor search and filtering
-
----
-
-## 👨‍💻 Author
-
-Developed as part of a Tutor Booking Platform project using the MERN stack and Next.js.
