@@ -26,10 +26,8 @@ const AvailableTeacher = () => {
 
     const handleBookSession = (tutorId) => {
         if (session) {
-            // User is logged in, go directly to booking page
             router.push(`/tutors/${tutorId}`);
         } else {
-            // User is not logged in, send to login with the callbackUrl
             router.push(`/login?callbackUrl=/tutors/${tutorId}`);
         }
     };

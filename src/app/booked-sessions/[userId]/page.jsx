@@ -37,11 +37,9 @@ const BookedSessionsPage = async (props) => {
         <div className="min-h-screen bg-white dark:bg-gray-950 py-10 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    {/* Add dark:text-white */}
                     <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
                         My Booked Sessions
                     </h1>
-                    {/* Add dark:text-gray-400 */}
                     <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 font-medium">
                         Track, monitor status verification, or cancel appointments across your scheduled tutor sessions.
                     </p>

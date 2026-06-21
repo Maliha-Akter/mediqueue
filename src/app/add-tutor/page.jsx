@@ -1,7 +1,4 @@
 import AddTutorClient from "@/components/AddTutorClient";
-
-
-
 export const metadata = {
   title: "Add Tutor",
 };

@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MediQueue - Smart Tutor Booking Platform
 
-## Getting Started
+🔗 **Live Site:** [Insert your Vercel/Live URL here]
 
-First, run the development server:
+## 📖 Project Overview
+
+**MediQueue** is a modern tutor booking platform that connects students with qualified tutors through a seamless and user-friendly experience. Students can browse available tutors, view detailed profiles, and book learning sessions based on subject expertise and availability.
+
+The platform ensures efficient scheduling, prevents booking conflicts, and helps learners manage their educational journey with ease.
+
+---
+
+## ✨ Key Features
+
+### 🔍 Seamless Tutor Discovery
+
+* Browse tutors by subject and expertise.
+* View detailed tutor profiles.
+* Quickly find the right tutor for your learning needs.
+
+### 📅 Intelligent Booking System
+
+* Book tutor sessions instantly.
+* Real-time availability verification.
+* Prevents duplicate and overlapping bookings.
+
+### 🎟️ Digital Session Management
+
+* Track booked sessions from a personalized dashboard.
+* Manage upcoming classes efficiently.
+* Easy access to session details and booking information.
+
+### 👥 Role-Based Authentication
+
+* Secure registration and login system.
+* Separate functionalities for students and tutors.
+* Tutors can manage their profiles and session availability.
+
+### 📱 Responsive User Interface
+
+* Mobile-first responsive design.
+* Optimized for desktop, tablet, and mobile devices.
+* Smooth and intuitive user experience.
+
+---
+
+## 🛠️ Technologies Used
+
+### Frontend
+
+* Next.js (App Router)
+* React.js
+* Tailwind CSS
+* HeroUI
+* Lucide React
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Database
+
+* MongoDB
+
+### Authentication
+
+* Better Auth
+
+---
+
+## 🚀 Getting Started
+
+### Clone the Repository
+
+```bash
+git clone <repository-url>
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Build for Production
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Start Production Server
 
-## Learn More
+```bash
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📌 Future Improvements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Online payment integration
+* Tutor rating and review system
+* Video session integration
+* Email and SMS notifications
+* Advanced tutor search and filtering
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 👨‍💻 Author
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Developed as part of a Tutor Booking Platform project using the MERN stack and Next.js.
