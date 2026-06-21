@@ -1,6 +1,6 @@
 # MediQueue - Smart Tutor Booking Platform
 
-🔗 **Live Site:** [https://mediqueue-kohl.vercel.app/]
+🔗 **Live Site:** https://mediqueue-kohl.vercel.app/
 
 ## 📖 Project Overview
 

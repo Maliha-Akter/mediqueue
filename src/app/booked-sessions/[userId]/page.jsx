@@ -33,7 +33,6 @@ const BookedSessionsPage = async (props) => {
     }
 
     return (
-        // 'bg-white' for light, 'dark:bg-gray-950' for dark
         <div className="min-h-screen bg-white dark:bg-gray-950 py-10 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">

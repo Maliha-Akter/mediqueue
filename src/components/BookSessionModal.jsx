@@ -101,7 +101,7 @@ export function BookSessionModal({ tutor, currentUser }) {
                         isDateBlocked ? "Booking not available yet" : "Book Session"}
             </Button>
 
-            {/* 4. Modal controlled by isOpen state */}
+            {/* 4. Modal is controlled by isOpen state */}
             <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
                 <Modal.Backdrop>
                     <Modal.Container placement="auto">

@@ -29,61 +29,66 @@ export default function BookedSessionsTable({ initialBookings }) {
     }
 
     return (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
-                    <thead className="hidden md:table-header-group bg-gray-50 text-sm font-bold uppercase tracking-wider text-gray-500 border-b border-gray-100">
+                    {/* Header: Visible only on MD and up */}
+                    <thead className="hidden md:table-header-group bg-gray-50 dark:bg-gray-800 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-800">
                         <tr>
-                            <th className="py-5 px-6">Assigned Tutor</th>
-                            <th className="py-5 px-6">Student Info</th>
-                            <th className="py-5 px-6">Booked Date</th>
-                            <th className="py-5 px-6">Status</th>
-                            <th className="py-5 px-6 text-right">Actions</th>
+                            <th className="py-4 px-6">Assigned Tutor</th>
+                            <th className="py-4 px-6">Student Info</th>
+                            <th className="py-4 px-6">Booked Date</th>
+                            <th className="py-4 px-6">Status</th>
+                            <th className="py-4 px-6 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-base font-medium text-gray-700">
+
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800 border border-b-[#a3536d]">
                         {bookings.map((booking) => (
                             <tr
                                 key={booking._id}
-                                className="flex flex-col md:table-row hover:bg-gray-50/60 transition-colors p-5 md:p-0 border-b border-gray-600 md:border-b-0 last:border-b-0"
+                                className="block md:table-row p-4 md:p-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-[#a3536d] lg:border-gray-100 dark:lg:border-gray-800 last:border-b-0"
                             >
-                                <td className="py-3 px-0 md:py-6 md:px-6">
-                                    <div className="flex justify-between md:block">
-                                        <h4 className="font-bold text-lg text-gray-900">{booking.tutorName}</h4>
-                                        <span className="md:hidden text-xs bg-gray-100 px-2.5 py-0.5 rounded text-gray-500">ID: {booking.tutorId}</span>
+                                {/* Tutor Info */}
+                                <td className="py-2 px-0 md:py-4 md:px-6 block md:table-cell">
+                                    <div className="flex flex-col">
+                                        <h4 className="font-bold text-gray-900 dark:text-white">{booking.tutorName}</h4>
+                                        <span className="text-[10px] font-mono text-gray-400">ID: {booking.tutorId}</span>
                                     </div>
-                                    <p className="hidden md:block text-sm text-gray-400 font-medium">ID: {booking.tutorId}</p>
                                 </td>
 
-                                <td className="py-3 px-0 md:py-6 md:px-6">
-                                    <div className="text-gray-900 font-semibold">{booking.studentName}</div>
-                                    <div className="text-sm text-gray-500 font-normal">{booking.studentEmail}</div>
+                                {/* Student Info */}
+                                <td className="py-2 px-0 md:py-4 md:px-6 block md:table-cell">
+                                    <div className="text-gray-900 dark:text-gray-200 font-semibold">{booking.studentName}</div>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400">{booking.studentEmail}</div>
                                 </td>
 
-                                <td className="py-3 px-0 md:py-6 md:px-6 text-gray-600">
-                                    <span className="md:hidden text-xs font-bold text-gray-400 uppercase mr-2">Date:</span>
-                                    {new Date(booking.bookedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                {/* Date */}
+                                <td className="py-2 px-0 md:py-4 md:px-6 block md:table-cell">
+                                    <span className="md:hidden text-[10px] font-bold text-gray-400 uppercase mr-2">Date:</span>
+                                    <span className="text-gray-600 dark:text-gray-300">
+                                        {new Date(booking.bookedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </span>
                                 </td>
 
-                                <td className="py-3 px-0 md:py-6 md:px-6">
-                                    <span className={`inline-block px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide ${
-                                        booking.bookingStatus === 'booked' ? "bg-emerald-50 text-emerald-600" : 
-                                        booking.bookingStatus === 'cancelled' ? "bg-amber-50 text-amber-600" : "bg-gray-100 text-gray-500"
-                                    }`}>
+                                {/* Status */}
+                                <td className="py-2 px-0 md:py-4 md:px-6 block md:table-cell">
+                                    <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${booking.bookingStatus === 'booked' ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30" :
+                                        booking.bookingStatus === 'cancelled' ? "bg-amber-50 text-amber-600 dark:bg-amber-900/30" : "bg-gray-100 text-gray-500"
+                                        }`}>
                                         {booking.bookingStatus}
                                     </span>
                                 </td>
 
-                                <td className="py-4 px-0 md:py-6 md:px-6 text-left md:text-right border-t md:border-t-0 mt-3 pt-4 md:mt-0 md:pt-6">
+                                {/* Actions */}
+                                <td className="py-4 px-0 md:py-4 md:px-6 block md:table-cell text-left md:text-right">
                                     {booking.bookingStatus === "booked" ? (
                                         <CancelSessionDialog
                                             booking={booking}
-                                            onCancelSuccess={(cancelledId) => 
-                                                setBookings(prev => 
-                                                    prev.map(b => 
-                                                        b._id === cancelledId ? { ...b, bookingStatus: "cancelled" } : b
-                                                    )
-                                                )
+                                            onCancelSuccess={(cancelledId) =>
+                                                setBookings(prev => prev.map(b =>
+                                                    b._id === cancelledId ? { ...b, bookingStatus: "cancelled" } : b
+                                                ))
                                             }
                                         />
                                     ) : (

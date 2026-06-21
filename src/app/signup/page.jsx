@@ -1,4 +1,4 @@
-// src/app/login/page.jsx
+// src/app/signup/page.jsx
 import { Suspense } from 'react';
 import SignUpComponent from '@/components/SignUpComponent';
 

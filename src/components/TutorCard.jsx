@@ -27,7 +27,7 @@ const TutorCard = ({ tutor }) => {
     const router = useRouter();
     const pathname = usePathname();
     
-    // Check for user session
+    // Checking for user session
     const { data: session } = authClient.useSession();
 
     const handleProfileClick = () => {

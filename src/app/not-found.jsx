@@ -37,7 +37,6 @@ export default function NotFound() {
                 </Card>
 
                 {/* ACTION BUTTON */}
-                {/* ACTION BUTTON */}
                 <div className="pt-2">
                     <Button
                         as={Link}

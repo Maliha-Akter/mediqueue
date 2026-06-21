@@ -79,7 +79,7 @@ const Navbar = () => {
     };
 
     const handleSignOut = async () => {
-        setIsLoggingOut(true); // Trigger the spinner
+        setIsLoggingOut(true); // Triggering the spinner
         setIsProfileDropdownOpen(false);
 
         await authClient.signOut();
@@ -88,10 +88,10 @@ const Navbar = () => {
             router.push('/');
             router.refresh();
             setIsLoggingOut(false);
-        }, 800); // 800ms delay for better UX
+        }, 800); 
     };
 
-    // If not mounted, render a minimal version to prevent hydration errors
+  
     if (!mounted) {
         return (
             <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 h-16 flex items-center">
